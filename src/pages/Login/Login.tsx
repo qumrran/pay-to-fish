@@ -1,60 +1,59 @@
 import React, { useState } from 'react';
+import { auth } from '../../firebase/firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
-const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage: React.FC = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Logging in with:', { email, password });
+    const email = event.currentTarget.email.value;
+    const password = event.currentTarget.password.value;
+
+    try {
+      if (isRegistering) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert('Konto zostało utworzone!');
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error) {
+      console.error('Błąd:', error);
+      alert(isRegistering ? 'Błąd rejestracji' : 'Błąd logowania');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-gray-700 mb-2">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-gray-700 mb-2">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Enter your password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg shadow-md hover:bg-blue-600"
-          >
-            Log In
-          </button>
-        </form>
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <form onSubmit={handleAuth} className="p-6 bg-white shadow-md rounded">
+        <h1 className="text-2xl font-bold mb-4">{isRegistering ? 'Rejestracja' : 'Logowanie'}</h1>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium">Email</label>
+          <input type="email" name="email" id="email" required 
+                 className="w-full px-3 py-2 border rounded" />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium">Hasło</label>
+          <input type="password" name="password" id="password" required 
+                 className="w-full px-3 py-2 border rounded" />
+        </div>
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
+          {isRegistering ? 'Zarejestruj się' : 'Zaloguj się'}
+        </button>
         <p className="text-center mt-4">
-          <a href="/" className="text-blue-500 hover:underline">
-            Back to Home
-          </a>
+          {isRegistering ? (
+            <span onClick={() => setIsRegistering(false)} className="text-blue-500 cursor-pointer">
+              Masz już konto? Zaloguj się
+            </span>
+          ) : (
+            <span onClick={() => setIsRegistering(true)} className="text-blue-500 cursor-pointer">
+              Nie masz konta? Zarejestruj się
+            </span>
+          )}
         </p>
-      </div>
+      </form>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
