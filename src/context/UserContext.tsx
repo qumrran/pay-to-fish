@@ -1,29 +1,22 @@
-// src/context/UserContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth'; // Import User typowany z Firebase
+import React, { createContext, useState, useEffect } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 
-// Definiowanie interfejsu dla wartości kontekstu
 interface UserContextType {
-  user: User | null; // user będzie albo użytkownikiem, albo null
+  user: User | null;
 }
 
-// Typowanie kontekstu
 export const UserContext = createContext<UserContextType | null>(null);
 
-// Dodanie typu dla propsów komponentu UserProvider
-interface UserProviderProps {
-  children: ReactNode; // Dzieci komponentu mogą być dowolnym elementem React
-}
-
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Aktualizacja stanu użytkownika
+      setUser(currentUser);
     });
-    return () => unsubscribe(); // Czyszczenie subskrypcji
+
+    return () => unsubscribe();
   }, []);
 
   return (
