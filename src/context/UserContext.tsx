@@ -27,17 +27,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  // Funkcja wylogowania
+ 
   const logout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Resetuje stan użytkownika po wylogowaniu
+      setUser(null); 
     } catch (error) {
       console.error('Błąd podczas wylogowywania:', error);
     }
   };
 
-  // Funkcja logowania przez Google
+  
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {

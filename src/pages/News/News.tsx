@@ -1,4 +1,4 @@
-// src/pages/News/News.tsx
+
 import React from 'react';
 
 const News: React.FC = () => {

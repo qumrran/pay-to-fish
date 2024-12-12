@@ -1,4 +1,4 @@
-// src/pages/Reservations/Reservations.tsx
+
 import React from 'react';
 
 const Reservations: React.FC = () => {

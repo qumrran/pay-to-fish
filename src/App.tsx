@@ -11,6 +11,7 @@ import Reservations from './pages/Reservations/Reservations';
 import Blog from './pages/Blog/Blog';
 import CatchBoard from './pages/CatchBoard/CatchBoard';
 import Account from './pages/Account/Account';
+import ContactPage from './pages/ContactPage/ContactPage';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const user = useContext(UserContext)?.user;
@@ -27,19 +28,20 @@ const App: React.FC = () => {
     <UserProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage/>} />
+          <Route path="/register" element={<RegisterPage/>} />
           <Route
             path="/*"
             element={
               <ProtectedRoute>
                 <MainMenu />
                 <Routes>
-                  <Route path="/news" element={<News />} />
-                  <Route path="/reservations" element={<Reservations />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/catchboard" element={<CatchBoard />} />
-                  <Route path="/account" element={<Account />} />
+                  <Route path="/news" element={<News/>} />
+                  <Route path="/reservations" element={<Reservations/>}/>
+                  <Route path="/blog" element={<Blog/>}/>
+                  <Route path="/catchboard" element={<CatchBoard/>}/>
+                  <Route path="/account" element={<Account/>} />
+                  <Route path="/contact" element={<ContactPage/>} />
                   <Route path="*" element={<Navigate to="/news" />} />
                 </Routes>
               </ProtectedRoute>

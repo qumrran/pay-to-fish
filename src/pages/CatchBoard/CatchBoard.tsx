@@ -1,4 +1,4 @@
-// src/pages/CatchBoard/CatchBoard.tsx
+
 import React from 'react';
 
 const CatchBoard: React.FC = () => {
