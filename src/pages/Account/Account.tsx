@@ -5,6 +5,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import LogoutButton from '../../components/LogoutButton/LogoutButton';
+import { ClipLoader } from 'react-spinners'; // Import spinnera
 
 interface Reservation {
   id: string;
@@ -17,12 +18,12 @@ interface Reservation {
 
 const Account: React.FC = () => {
   const userContext = useContext(UserContext);
-  const user = userContext?.user; // Upewniamy się, że użytkownik jest dostępny
+  const user = userContext?.user;
 
   const [loading, setLoading] = useState(true);
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
-  const navigate = useNavigate(); // Hook do nawigacji
+  const navigate = useNavigate();
 
   // Pobieramy rezerwacje użytkownika
   useEffect(() => {
@@ -43,9 +44,8 @@ const Account: React.FC = () => {
     }
   }, [user?.uid]);
 
-  // Funkcja obsługująca kliknięcie w "Edytuj"
   const handleEditClick = (reservationId: string) => {
-    navigate(`/reservations/${reservationId}`); // Przekierowanie do edycji rezerwacji
+    navigate(`/reservations/${reservationId}`);
   };
 
   return (
@@ -69,8 +69,12 @@ const Account: React.FC = () => {
 
         {/* Sekcja rezerwacji */}
         <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
+
         {loading ? (
-          <p>Ładowanie rezerwacji...</p>
+          <div className="flex justify-center items-center h-32">
+            {/* Spinner z React Spinners */}
+            <ClipLoader color="#3498db" size={50} loading={loading} />
+          </div>
         ) : (
           <ul>
             {reservations.length > 0 ? (
@@ -81,9 +85,8 @@ const Account: React.FC = () => {
                   <p>Liczba dni: {reservation.days}</p>
                   <p>Koszt: {reservation.totalCost} zł</p>
 
-                  {/* Przycisk edytuj */}
                   <button
-                    onClick={() => handleEditClick(reservation.id)} // Przekierowanie do strony edycji
+                    onClick={() => handleEditClick(reservation.id)}
                     className="mr-2 bg-yellow-500 text-white py-1 px-2 rounded"
                   >
                     Edytuj Rezerwację
