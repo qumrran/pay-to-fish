@@ -1,4 +1,4 @@
-// src/pages/Blog/Blog.tsx
+
 import React from 'react';
 
 const Blog: React.FC = () => {
