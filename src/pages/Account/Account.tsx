@@ -6,7 +6,6 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import LogoutButton from '../../components/LogoutButton/LogoutButton';
 
-// Typ rezerwacji
 interface Reservation {
   id: string;
   fishingSpot: string;

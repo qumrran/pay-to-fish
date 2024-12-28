@@ -27,14 +27,10 @@ const App: React.FC = () => {
   return (
     <UserProvider>
       <BrowserRouter>
-        {/* MainMenu powinno być zawsze widoczne w obrębie aplikacji */}
         <MainMenu />
         <Routes>
-          {/* Strona logowania i rejestracji */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-
-          {/* Strony wymagające logowania */}
           <Route
             path="/*"
             element={
@@ -42,7 +38,7 @@ const App: React.FC = () => {
                 <Routes>
                   <Route path="/news" element={<News />} />
                   <Route path="/reservations" element={<Reservations />} />
-                  <Route path="/reservations/:reservationId" element={<Reservations />} /> {/* Trasa dla edycji rezerwacji */}
+                  <Route path="/reservations/:reservationId" element={<Reservations />} /> 
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/catchboard" element={<CatchBoard />} />
                   <Route path="/account" element={<Account />} />
