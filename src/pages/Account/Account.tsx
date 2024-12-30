@@ -5,7 +5,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import LogoutButton from '../../components/LogoutButton/LogoutButton';
-import { ClipLoader } from 'react-spinners'; // Import spinnera
+import { ClipLoader } from 'react-spinners'; 
 
 interface Reservation {
   id: string;
@@ -25,7 +25,7 @@ const Account: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Pobieramy rezerwacje użytkownika
+  
   useEffect(() => {
     if (user) {
       const reservationsRef = collection(db, 'reservations');
@@ -51,7 +51,7 @@ const Account: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="flex flex-col items-center">
-        {/* Avatar użytkownika */}
+        
         {user?.photoURL ? (
           <img
             src={user.photoURL}
@@ -67,12 +67,12 @@ const Account: React.FC = () => {
           Witaj, {user?.displayName || 'Użytkowniku'}!
         </p>
 
-        {/* Sekcja rezerwacji */}
+      
         <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
 
         {loading ? (
           <div className="flex justify-center items-center h-32">
-            {/* Spinner z React Spinners */}
+            
             <ClipLoader color="#3498db" size={50} loading={loading} />
           </div>
         ) : (
@@ -99,7 +99,7 @@ const Account: React.FC = () => {
           </ul>
         )}
 
-        {/* Przycisk wylogowania */}
+       
         <LogoutButton />
       </div>
     </div>
