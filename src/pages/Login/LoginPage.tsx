@@ -3,6 +3,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth } from '../../firebase/firebaseConfig';
 import { UserContext } from '../../context/UserContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage: React.FC = () => {
   const context = useContext(UserContext);
@@ -21,20 +23,22 @@ const LoginPage: React.FC = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Zalogowano pomyślnie!');
       navigate('/news');
     } catch (error) {
       console.error('Login error:', error);
-      alert('Niepoprawne dane logowania.');
+      toast.error('Niepoprawne dane logowania.');
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
       await loginWithGoogle();
+      toast.success('Zalogowano pomyślnie przez Google!');
       navigate('/news');
     } catch (error) {
       console.error('Błąd podczas logowania przez Google:', error);
-      alert('Nie udało się zalogować przez Google.');
+      toast.error('Nie udało się zalogować przez Google.');
     }
   };
 
@@ -45,6 +49,15 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        closeOnClick={true}
+        pauseOnHover={false}
+        draggable={false}
+        theme="dark"
+      />
       <form onSubmit={handleLogin} className="p-6 bg-white shadow-md rounded w-80">
         <h1 className="text-2xl font-bold mb-4">Zaloguj się</h1>
         <div className="mb-4">
