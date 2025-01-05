@@ -3,10 +3,10 @@ import { db, storage } from '../../firebase/firebaseConfig'; // Importowanie kon
 import { UserContext } from '../../context/UserContext';
 import { collection, addDoc, query, onSnapshot, orderBy, serverTimestamp } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import imageCompression from 'browser-image-compression'; // Importowanie biblioteki kompresji
 import { FaCircleUser } from 'react-icons/fa6';
-import { v4 as uuidv4 } from 'uuid'; // Używamy UUID dla unikalnych ID dla zdjęć i komentarzy
+import { v4 as uuidv4 } from 'uuid';
 
-// Typy dla postu i komentarza
 interface CatchPost {
   id: string;
   userId: string;
@@ -19,26 +19,14 @@ interface CatchPost {
   };
 }
 
-interface Comment {
-  userId: string;
-  content: string;
-  createdAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
-}
-
 const CatchBoard: React.FC = () => {
   const userContext = useContext(UserContext);
   const user = userContext?.user;
-  
-  const [description, setDescription] = useState<string>(''); // Typowanie stanu na string
-  const [image, setImage] = useState<File | null>(null); // Typowanie stanu na plik lub null
-  const [posts, setPosts] = useState<CatchPost[]>([]); // Lista postów - typowane jako CatchPost[]
-  const [comments, setComments] = useState<Comment[]>([]); // Lista komentarzy - typowane jako Comment[]
-  const [newComment, setNewComment] = useState<string>(''); // Typowanie stanu na string
 
-  // Wczytywanie istniejących postów
+  const [description, setDescription] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
+  const [posts, setPosts] = useState<CatchPost[]>([]);
+
   useEffect(() => {
     const q = query(collection(db, 'catch_board'), orderBy('createdAt', 'desc'));
 
@@ -50,19 +38,64 @@ const CatchBoard: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  // Funkcja obsługująca dodawanie posta
+  // Funkcja do walidacji i kompresji plików
+  const handleFileValidationAndCompression = async (file: File | null): Promise<File | null> => {
+    if (!file) {
+      alert("Nie wybrano pliku.");
+      return null;
+    }
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      alert("Dozwolone są tylko pliki graficzne (JPG, PNG, GIF).");
+      return null;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // Limit 5MB
+      alert("Plik jest za duży. Maksymalny rozmiar to 5MB.");
+      return null;
+    }
+
+    const options = {
+      maxSizeMB: 0.3, // 300KB
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      console.log("Oryginalny rozmiar:", file.size / 1024, "KB");
+      console.log("Skonwertowany rozmiar:", compressedFile.size / 1024, "KB");
+      return compressedFile;
+    } catch (error) {
+      console.error("Błąd podczas kompresji obrazu:", error);
+      alert("Nie udało się skompresować pliku.");
+      return null;
+    }
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    const validatedFile = await handleFileValidationAndCompression(file);
+    if (validatedFile) {
+      setImage(validatedFile); // Przechowujemy skompresowany plik
+    }
+  };
+
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !image || !user) return;
+    if (!description || !image || !user) {
+      alert("Wszystkie pola są wymagane.");
+      return;
+    }
 
     // Upload zdjęcia do Firebase Storage
     const imageRef = ref(storage, `catch_board_images/${uuidv4()}`);
-    const uploadTask = await uploadBytes(imageRef, image);
-
-    const imageUrl = await getDownloadURL(uploadTask.ref);
-
-    // Dodajemy nowy post do Firestore
     try {
+      const uploadTask = await uploadBytes(imageRef, image);
+      const imageUrl = await getDownloadURL(uploadTask.ref);
+
+      // Dodajemy nowy post do Firestore
       await addDoc(collection(db, 'catch_board'), {
         userId: user.uid,
         description,
@@ -73,46 +106,12 @@ const CatchBoard: React.FC = () => {
 
       setDescription('');
       setImage(null);
+      alert("Post został dodany!");
     } catch (error) {
       console.error("Błąd przy dodawaniu posta:", error);
+      alert("Nie udało się dodać posta.");
     }
   };
-
-  // Funkcja obsługująca dodawanie komentarza
-  const handleCommentSubmit = async (postId: string) => {
-    if (!newComment || !user) return;
-
-    try {
-      await addDoc(collection(db, 'catch_board', postId, 'comments'), {
-        userId: user.uid,
-        content: newComment,
-        createdAt: serverTimestamp(),
-      });
-
-      setNewComment('');
-    } catch (error) {
-      console.error("Błąd przy dodawaniu komentarza:", error);
-    }
-  };
-
-  // Funkcja do wczytywania komentarzy
-  const loadComments = (postId: string) => {
-    const q = query(collection(db, 'catch_board', postId, 'comments'), orderBy('createdAt', 'asc'));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const postComments: Comment[] = querySnapshot.docs.map(doc => doc.data()) as Comment[];
-      setComments(postComments);
-    });
-
-    return unsubscribe;
-  };
-
-  // Ładowanie komentarzy po załadowaniu postów
-  useEffect(() => {
-    if (posts.length > 0) {
-      loadComments(posts[0]?.id); // Załadowanie komentarzy dla pierwszego posta jako przykład
-    }
-  }, [posts]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -143,7 +142,7 @@ const CatchBoard: React.FC = () => {
           />
           <input
             type="file"
-            onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+            onChange={handleImageChange}
             className="mb-2"
           />
           <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
@@ -164,31 +163,6 @@ const CatchBoard: React.FC = () => {
             </div>
             <img src={post.imageUrl} alt="Połów" className="w-full h-64 object-cover mb-4" />
             <p>{post.description}</p>
-            <p className="text-sm text-gray-500">{new Date(post.createdAt.seconds * 1000).toLocaleString()}</p>
-
-            {/* Komentarze */}
-            <div>
-              <h3 className="font-bold mt-4">Komentarze:</h3>
-              {comments.map((comment, index) => (
-                <div key={index} className="border-t mt-2 pt-2">
-                  <p>{comment.content}</p>
-                  <p className="text-sm text-gray-500">{new Date(comment.createdAt.seconds * 1000).toLocaleString()}</p>
-                </div>
-              ))}
-
-              {/* Formularz do dodawania komentarzy */}
-              {user && (
-                <div className="mt-4">
-                  <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Napisz komentarz"
-                    className="w-full p-2 border rounded mb-2"
-                  />
-                  <button onClick={() => handleCommentSubmit(post.id)} className="bg-green-500 text-white py-1 px-4 rounded">Dodaj komentarz</button>
-                </div>
-              )}
-            </div>
           </div>
         ))}
       </div>
