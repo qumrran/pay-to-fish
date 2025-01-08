@@ -8,88 +8,129 @@ const MainMenu: React.FC = () => {
   const user = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  if (!user) return null; 
+  if (!user) return null;
 
   return (
-    <nav className="bg-blue-500 p-4 text-white">
-      
-      <div className="flex justify-between items-center">
-        <button
-          className="md:hidden text-white focus:outline-none"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? (
-            <FiX className="w-6 h-6" /> 
-          ) : (
-            <FiMenu className="w-6 h-6" /> 
-          )}
-        </button>
-      </div>
+    <nav className="bg-cyan-500 sticky top-0 z-50 shadow-md">
+      <div className="max-w-9xl mx-auto px-4">
+        
+        <div className="flex justify-between items-center h-16">
+          
+          <div className="hidden md:block flex-1"></div>
 
-      
-      <ul
-        className={`flex flex-col md:flex-row md:justify-around mt-4 md:mt-0 ${
-          isMenuOpen ? 'block' : 'hidden md:flex'
-        }`}
-      >
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/news"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)} 
+          
+          <ul className="hidden md:flex md:space-x-6 md:text-lg flex items-center justify-center">
+            <li>
+              <NavLink to="/news" className="text-white hover:text-gray-100">
+                Aktualności
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/reservations" className="text-white hover:text-gray-100">
+                Rezerwacje
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/blog" className="text-white hover:text-gray-100">
+                Blog
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/catchboard" className="text-white hover:text-gray-100">
+                Tablica Połowów
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/contact" className="text-white hover:text-gray-100">
+                Kontakt
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/account" className="text-white hover:text-gray-100">
+                Moje Konto
+              </NavLink>
+            </li>
+            <li>
+              <LogoutButton />
+            </li>
+          </ul>
+
+     
+          <div className="hidden md:block flex-1"></div>
+
+          <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            Aktualności
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/reservations"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Rezerwacje
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/blog"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Blog
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/catchboard"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Tablica Połowów
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/contact"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Kontakt
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <NavLink
-            to="/account"
-            className="hover:text-gray-300 block md:inline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Moje Konto
-          </NavLink>
-        </li>
-        <li className="py-2 md:py-0">
-          <LogoutButton />
-        </li>
-      </ul>
+            {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        
+        <ul
+          className={`md:hidden flex flex-col items-center space-y-4 text-lg bg-cyan-500 py-4 transition-all duration-300 ${
+            isMenuOpen ? 'block' : 'hidden'
+          }`}
+        >
+          <li>
+            <NavLink
+              to="/news"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Aktualności
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/reservations"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Rezerwacje
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/blog"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/catchboard"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Tablica Połowów
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/contact"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Kontakt
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/account"
+              className="text-white hover:text-gray-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Moje Konto
+            </NavLink>
+          </li>
+          <li>
+            <LogoutButton />
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 };
