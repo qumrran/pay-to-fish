@@ -3,9 +3,10 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { ClipLoader } from 'react-spinners';
 import LazyLoad from 'react-lazyload';
-import { SlArrowRightCircle } from "react-icons/sl";
+import { SlArrowRightCircle } from 'react-icons/sl'; 
+import BackButton from '../../components/BackButton/BackButton';
 
-// Definicja typu BlogPost
+
 interface BlogPost {
   id: string;
   title: string;
@@ -39,7 +40,7 @@ const Blog: React.FC = () => {
         } as BlogPost;
       });
 
-      // Sortowanie po dacie (najnowsze na początku)
+    
       const sortedData = data.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
@@ -54,13 +55,11 @@ const Blog: React.FC = () => {
   const renderExpandedPost = (post: BlogPost) => (
     <div className="p-4">
       <div className="mx-auto max-w-5xl bg-white p-6 shadow-md rounded-lg">
-        <button
-          className="text-blue-500 hover:text-blue-700 mb-4"
-          onClick={() => setExpandedPost(null)}
-        >
-          Wstecz
-        </button>
-        <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
+       
+        <BackButton onClick={() => setExpandedPost(null)} />
+
+        
+        <h1 className="text-3xl font-bold mb-4 mt-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{post.date}</p>
         {post.imgUrl && (
           <img src={post.imgUrl} alt={post.title} className="w-full h-auto mb-4 rounded" />
@@ -80,6 +79,9 @@ const Blog: React.FC = () => {
             </span>
           ))}
         </div>
+
+       
+        <BackButton onClick={() => setExpandedPost(null)} />
       </div>
     </div>
   );
@@ -93,11 +95,11 @@ const Blog: React.FC = () => {
       ) : expandedPost ? (
         renderExpandedPost(expandedPost)
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {posts.map((post) => (
             <div
               key={post.id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden"
+              className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col"
             >
               {post.imgUrl && (
                 <LazyLoad height={200} offset={100}>
@@ -108,8 +110,14 @@ const Blog: React.FC = () => {
                   />
                 </LazyLoad>
               )}
-              <div className="p-4">
-                <h3 className="font-semibold text-xl mb-2">{post.title}</h3>
+              <div className="p-4 flex flex-col flex-grow">
+                
+                <h3
+                  className="font-semibold text-xl mb-2 line-clamp-2 overflow-hidden text-ellipsis"
+                  title={post.title}
+                >
+                  {post.title}
+                </h3>
                 <p className="text-sm text-gray-500 mb-4">{post.date}</p>
                 <p className="text-sm text-gray-700 mb-4">
                   {post.content.substring(0, 150)}...
@@ -118,30 +126,30 @@ const Blog: React.FC = () => {
                   <span>Autor: {post.author}</span>
                   <span>Kategoria: {post.category}</span>
                 </div>
-                <div className="flex mt-4">
+                <div className="flex flex-wrap mt-4">
                   {post.tags.slice(0, 2).map((tag, index) => (
                     <span
                       key={index}
-                      className="bg-gray-200 text-gray-600 text-xs py-1 px-2 rounded-full mr-2"
+                      className="bg-gray-200 text-gray-600 text-xs py-1 px-2 rounded-full mr-2 mb-2"
                     >
                       {tag}
                     </span>
                   ))}
                   {post.tags.length > 2 && (
-                    <span className="bg-gray-200 text-gray-600 text-xs py-1 px-2 rounded-full mr-2">
+                    <span className="bg-gray-200 text-gray-600 text-xs py-1 px-2 rounded-full mr-2 mb-2">
                       +{post.tags.length - 2} inne
                     </span>
                   )}
                 </div>
-                <button
-  onClick={() => setExpandedPost(post)}
-  className="mt-4 text-black hover:text-white flex items-center border-2 border-black rounded px-2 py-1 hover:bg-black hover:cursor-pointer transition-colors duration-200 text-sm"
->
-  Czytaj dalej
-  <SlArrowRightCircle className="ml-2 text-lg" />
-</button>
-
-
+                <div className="mt-auto">
+                  <button
+                    onClick={() => setExpandedPost(post)}
+                    className="mt-4 text-white bg-cyan-500 hover:bg-cyan-600 flex items-center rounded px-2 py-1 hover:cursor-pointer transition-colors duration-200 text-sm"
+                  >
+                    Czytaj dalej
+                    <SlArrowRightCircle className="ml-2 text-lg" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
