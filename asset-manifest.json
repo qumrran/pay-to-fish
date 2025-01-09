@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/pay-to-fish/static/css/main.7a7de260.css",
-    "main.js": "/pay-to-fish/static/js/main.2268a16f.js",
+    "main.css": "/pay-to-fish/static/css/main.a82bf832.css",
+    "main.js": "/pay-to-fish/static/js/main.ecd5f5d1.js",
     "index.html": "/pay-to-fish/index.html",
-    "main.7a7de260.css.map": "/pay-to-fish/static/css/main.7a7de260.css.map",
-    "main.2268a16f.js.map": "/pay-to-fish/static/js/main.2268a16f.js.map"
+    "main.a82bf832.css.map": "/pay-to-fish/static/css/main.a82bf832.css.map",
+    "main.ecd5f5d1.js.map": "/pay-to-fish/static/js/main.ecd5f5d1.js.map"
   },
   "entrypoints": [
-    "static/css/main.7a7de260.css",
-    "static/js/main.2268a16f.js"
+    "static/css/main.a82bf832.css",
+    "static/js/main.ecd5f5d1.js"
   ]
 }
