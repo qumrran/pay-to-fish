@@ -4,7 +4,7 @@ import { UserContext } from '../../context/UserContext';
 import { FaCircleUser } from "react-icons/fa6";
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import LogoutButton from '../../components/LogoutButton/LogoutButton';
+import LogoutButton2 from '../../components/LogoutButton2/LogoutButton2';
 import { ClipLoader } from 'react-spinners'; 
 
 interface Reservation {
@@ -100,7 +100,7 @@ const Account: React.FC = () => {
         )}
 
        
-        <LogoutButton />
+        <LogoutButton2/>
       </div>
     </div>
   );
