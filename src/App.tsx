@@ -12,7 +12,7 @@ import CatchBoard from './pages/CatchBoard/CatchBoard';
 import Account from './pages/Account/Account';
 import ContactPage from './pages/ContactPage/ContactPage';
 
-// ProtectedRoute zapewniający dostęp tylko zalogowanym użytkownikom
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const user = useContext(UserContext)?.user;
 
@@ -38,8 +38,9 @@ const App: React.FC = () => {
                 <Routes>
                   <Route path="/news" element={<News />} />
                   <Route path="/reservations" element={<Reservations />} />
-                  <Route path="/reservations/:reservationId" element={<Reservations />} /> 
+                  <Route path="/reservations/:reservationId" element={<Reservations />} />
                   <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<Blog />} /> 
                   <Route path="/catchboard" element={<CatchBoard />} />
                   <Route path="/account" element={<Account />} />
                   <Route path="/contact" element={<ContactPage />} />

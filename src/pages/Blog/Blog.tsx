@@ -5,7 +5,7 @@ import { ClipLoader } from 'react-spinners';
 import LazyLoad from 'react-lazyload';
 import { SlArrowRightCircle } from 'react-icons/sl'; 
 import BackButton from '../../components/BackButton/BackButton';
-
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface BlogPost {
   id: string;
@@ -15,13 +15,16 @@ interface BlogPost {
   imgUrl: string;
   category: string;
   author: string;
+  slug: string;
   tags: string[];
 }
 
 const Blog: React.FC = () => {
+  const { slug } = useParams(); 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPost, setExpandedPost] = useState<BlogPost | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const q = query(collection(db, 'blog'));
@@ -36,11 +39,11 @@ const Blog: React.FC = () => {
           imgUrl: docData.imgUrl || '',
           category: docData.category || 'Brak kategorii',
           author: docData.author || 'Nieznany autor',
+          slug: docData.slug || '',
           tags: Array.isArray(docData.tags) ? docData.tags : [],
         } as BlogPost;
       });
 
-    
       const sortedData = data.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
@@ -52,13 +55,14 @@ const Blog: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+ 
+  const postToDisplay = posts.find(post => post.slug === slug);
+
   const renderExpandedPost = (post: BlogPost) => (
     <div className="p-4">
       <div className="mx-auto max-w-5xl bg-white p-6 shadow-md rounded-lg">
-       
-        <BackButton onClick={() => setExpandedPost(null)} />
+        <BackButton onClick={() => navigate('/blog')} /> 
 
-        
         <h1 className="text-3xl font-bold mb-4 mt-4">{post.title}</h1>
         <p className="text-gray-500 mb-2">{post.date}</p>
         {post.imgUrl && (
@@ -80,8 +84,7 @@ const Blog: React.FC = () => {
           ))}
         </div>
 
-       
-        <BackButton onClick={() => setExpandedPost(null)} />
+        <BackButton onClick={() => navigate('/blog')} /> 
       </div>
     </div>
   );
@@ -92,8 +95,8 @@ const Blog: React.FC = () => {
         <div className="flex justify-center items-center h-32">
           <ClipLoader color="#3498db" size={50} loading={loading} />
         </div>
-      ) : expandedPost ? (
-        renderExpandedPost(expandedPost)
+      ) : postToDisplay ? (
+        renderExpandedPost(postToDisplay)  
       ) : (
         <div className="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {posts.map((post) => (
@@ -111,7 +114,6 @@ const Blog: React.FC = () => {
                 </LazyLoad>
               )}
               <div className="p-4 flex flex-col flex-grow">
-                
                 <h3
                   className="font-semibold text-xl mb-2 line-clamp-2 overflow-hidden text-ellipsis"
                   title={post.title}
@@ -143,7 +145,7 @@ const Blog: React.FC = () => {
                 </div>
                 <div className="mt-auto">
                   <button
-                    onClick={() => setExpandedPost(post)}
+                    onClick={() => navigate(`/blog/${post.slug}`)}  
                     className="mt-4 text-white bg-cyan-500 hover:bg-cyan-600 flex items-center rounded px-2 py-1 hover:cursor-pointer transition-colors duration-200 text-sm"
                   >
                     Czytaj dalej
