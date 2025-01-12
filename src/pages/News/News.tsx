@@ -6,6 +6,7 @@ import { ClipLoader } from 'react-spinners';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LazyLoad from 'react-lazyload';
+import { BsFillInfoCircleFill } from 'react-icons/bs';
 
 interface NewsItem {
   id: number;
@@ -38,7 +39,7 @@ const News: React.FC = () => {
   }, [user]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 font-serif"> 
       <ToastContainer
         position="top-center"
         autoClose={1000}
@@ -55,13 +56,25 @@ const News: React.FC = () => {
         </div>
       ) : (
         <>
-        
           <ul className="space-y-4">
             {news.map((newsItem) => (
               <li key={newsItem.id} className="p-4 bg-white shadow-md rounded">
                 <div className="mx-auto w-full max-w-3xl">
-                  <h3 className="font-bold text-lg mb-2">{newsItem.title}</h3>
-                  <p className="mb-4">{newsItem.content}</p>
+                 
+                  <div className="flex items-center justify-start mb-4">
+                    <BsFillInfoCircleFill className="text-3xl text-cyan-500 mr-3 " />
+                    <h3 className="font-serif font-bold text-2xl sm:text-3xl mb-0">
+                      {newsItem.title}
+                    </h3>
+                  </div>
+
+                 
+                  <div className="border-b-2 border-gray-300 mb-4 " />
+
+                  <p className="text-gray-700 sm:text-lg mb-4">
+                    {newsItem.content}
+                  </p>
+
                   {newsItem.imgUrl && (
                     <LazyLoad height={200} offset={100}>
                       <img
@@ -71,7 +84,8 @@ const News: React.FC = () => {
                       />
                     </LazyLoad>
                   )}
-                  <p className="text-sm text-gray-500">{newsItem.date}</p>
+
+                  <p className="text-sm text-gray-500 font-sans">{newsItem.date}</p>
                 </div>
               </li>
             ))}

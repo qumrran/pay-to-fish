@@ -55,20 +55,19 @@ const Blog: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
- 
   const postToDisplay = posts.find(post => post.slug === slug);
 
   const renderExpandedPost = (post: BlogPost) => (
     <div className="p-4">
-      <div className="mx-auto max-w-5xl bg-white p-6 shadow-md rounded-lg">
+      <div className="mx-auto max-w-5xl bg-gray-50 p-6 shadow-md rounded-lg">
         <BackButton onClick={() => navigate('/blog')} /> 
 
-        <h1 className="text-3xl font-bold mb-4 mt-4">{post.title}</h1>
+        <h1 className="text-3xl font-bold mb-4 mt-4 font-serif">{post.title}</h1>
         <p className="text-gray-500 mb-2">{post.date}</p>
         {post.imgUrl && (
           <img src={post.imgUrl} alt={post.title} className="w-full h-auto mb-4 rounded" />
         )}
-        <p className="text-lg text-gray-700 mb-4">{post.content}</p>
+        <p className="text-lg text-gray-700 mb-4 font-serif">{post.content}</p>
         <div className="text-sm text-gray-600 mb-4">
           <span>Autor: {post.author}</span>
           <span className="ml-4">Kategoria: {post.category}</span>
@@ -115,13 +114,13 @@ const Blog: React.FC = () => {
               )}
               <div className="p-4 flex flex-col flex-grow">
                 <h3
-                  className="font-semibold text-xl mb-2 line-clamp-2 overflow-hidden text-ellipsis"
+                  className="font-semibold text-xl mb-2 line-clamp-2 overflow-hidden text-ellipsis font-serif"
                   title={post.title}
                 >
                   {post.title}
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">{post.date}</p>
-                <p className="text-sm text-gray-700 mb-4">
+                <p className="text-sm text-gray-700 mb-4  ">
                   {post.content.substring(0, 150)}...
                 </p>
                 <div className="flex justify-between items-center text-xs text-gray-600 mb-4">
