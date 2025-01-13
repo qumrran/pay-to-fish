@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { RiLogoutCircleRLine } from 'react-icons/ri'; // Ikona wylogowania
+import { RiLogoutCircleRLine } from 'react-icons/ri'; 
 
 const LogoutButton: React.FC = () => {
   const context = useContext(UserContext);

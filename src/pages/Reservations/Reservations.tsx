@@ -16,6 +16,9 @@ import { UserContext } from '../../context/UserContext';
 import { useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
+import { FaRegEdit } from 'react-icons/fa';
+import { FaRegCalendar } from "react-icons/fa";
+
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Reservation {
@@ -35,6 +38,7 @@ const Reservations: React.FC = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext) || {};
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -132,8 +136,7 @@ const Reservations: React.FC = () => {
     }
   };
 
-  const handleEditReservation = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEditReservation = async () => {
     if (!user || !editingReservation) {
       toast.error('Musisz być zalogowany i edytować istniejącą rezerwację.');
       return;
@@ -155,6 +158,7 @@ const Reservations: React.FC = () => {
       toast.error('Nie udało się zaktualizować rezerwacji.');
     } finally {
       setLoading(false);
+      setShowConfirmation(false);
     }
   };
 
@@ -178,6 +182,11 @@ const Reservations: React.FC = () => {
     setEndDate(reservation.endDate);
     setDays(reservation.days);
     setTotalCost(reservation.totalCost);
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', 
+    });
   };
 
   const handleCancelEdit = () => {
@@ -187,11 +196,12 @@ const Reservations: React.FC = () => {
     setEndDate('');
     setDays(0);
     setTotalCost(0);
+    setShowConfirmation(false);
   };
 
   return (
-    <div className="p-4">
-  <ToastContainer
+    <div className="p-4 mx-auto w-full max-w-3xl">
+      <ToastContainer
         position="top-center" 
         autoClose={1000} 
         hideProgressBar={false} 
@@ -208,11 +218,28 @@ const Reservations: React.FC = () => {
       ) : (
         <>
           <form
-            onSubmit={editingReservation ? handleEditReservation : handleAddReservation}
-            className="mb-8 p-4 bg-white shadow-md rounded"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (editingReservation) {
+                setShowConfirmation(true);
+              } else {
+                handleAddReservation(e);
+              }
+            }}
+            className="mb-8 p-4 shadow-md rounded border-2 border-gray-400"  
           >
-            <h1 className="text-xl font-bold mb-4">
-              {editingReservation ? 'Edytuj Rezerwację' : 'Zarezerwuj Łowisko'}
+            <h1 className="text-xl font-bold mb-4 flex items-center gap-2">
+              {editingReservation ? (
+                <>
+                  <FaRegEdit />
+                  Edytuj Rezerwację
+                </>
+              ) : (
+                <>
+                <FaRegCalendar />
+                 Zarezerwuj Łowisko
+                </>
+              )}
             </h1>
             <div className="mb-4">
               <label className="block mb-1">Łowisko</label>
@@ -220,7 +247,7 @@ const Reservations: React.FC = () => {
                 value={fishingSpot}
                 onChange={(e) => setFishingSpot(e.target.value)}
                 required
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border-2 border-gray-400 rounded bg-white text-black focus:outline-none focus:ring focus:ring-cyan-500"
               >
                 <option value="Łowisko1">Łowisko 1</option>
                 <option value="Łowisko2">Łowisko 2</option>
@@ -233,8 +260,9 @@ const Reservations: React.FC = () => {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
+                onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                 required
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border-2 border-gray-400 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
                 min={today}
               />
             </div>
@@ -244,8 +272,9 @@ const Reservations: React.FC = () => {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
+                onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                 required
-                className="w-full px-3 py-2 border rounded"
+                className="w-full px-3 py-2 border-2 border-gray-400 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
                 min={startDate || today}
               />
             </div>
@@ -257,7 +286,7 @@ const Reservations: React.FC = () => {
                 Liczba dni: <strong>{days}</strong>
               </p>
             </div>
-            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+            <button type="submit" className="bg-cyan-500  hover:bg-cyan-600 transition-colors duration-300 text-white py-2 px-4 rounded">
               {editingReservation ? 'Zapisz zmiany' : 'Zarezerwuj'}
             </button>
 
@@ -265,17 +294,39 @@ const Reservations: React.FC = () => {
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="bg-gray-500 text-white py-2 px-4 rounded ml-2"
+                className="bg-gray-500 text-white py-2 px-4 rounded ml-2  hover:bg-gray-400 transition-colors duration-300"
               >
                 Anuluj
               </button>
             )}
           </form>
 
+          {showConfirmation && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white rounded p-6 shadow-lg max-w-sm w-full">
+                <p className="text-lg font-bold mb-4">Czy na pewno chcesz zapisać zmiany?</p>
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleEditReservation}
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Tak
+                  </button>
+                  <button
+                    onClick={() => setShowConfirmation(false)}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Nie
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
           <ul>
             {reservations.map((reservation) => (
-              <li key={reservation.id} className="p-4 bg-white shadow-md rounded mb-4">
+              <li key={reservation.id} className="p-4 bg-white shadow-md rounded mb-4 rounded border-2 border-gray-400">
                 <p>Łowisko: {reservation.fishingSpot}</p>
                 <p>Od: {reservation.startDate}</p>
                 <p>Do: {reservation.endDate}</p>

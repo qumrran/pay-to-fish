@@ -35,7 +35,7 @@ const LogoutButton: React.FC = () => {
         theme="dark"
       />
       <div className="relative group">
-        {/* Ikona */}
+        
         <button
           onClick={handleLogout}
           className="text-white bg-cyan-500 hover:bg-cyan-600 rounded-full p-2 transition-colors duration-200"
@@ -43,7 +43,7 @@ const LogoutButton: React.FC = () => {
           <RiLogoutCircleRLine className="text-lg" />
         </button>
 
-        {/* Tooltip na dole */}
+       
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-gray-800 text-white text-xs rounded py-1 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
           Wyloguj się
         </div>

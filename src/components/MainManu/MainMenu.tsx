@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { NavLink } from 'react-router-dom';
 import LogoutButton from './../LogoutButton/LogoutButton';
-import LogoutButton2 from './../LogoutButton2/LogoutButton2'; // Importujemy alternatywny przycisk
+import LogoutButton2 from './../LogoutButton2/LogoutButton2'; 
 import { FiMenu, FiX } from 'react-icons/fi';
 
 const MainMenu: React.FC = () => {
@@ -21,7 +21,7 @@ const MainMenu: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           <div className="hidden md:block flex-1"></div>
 
-          {/* Menu dla większych ekranów */}
+      
           <ul className="hidden md:flex md:space-x-6 md:text-lg flex items-center justify-center">
             <li>
               <NavLink to="/news" className={navItemClass}>
@@ -53,7 +53,7 @@ const MainMenu: React.FC = () => {
                 Moje Konto
               </NavLink>
             </li>
-            {/* LogoutButton dla większych ekranów */}
+          
             {user && (
               <li>
                 <LogoutButton />
@@ -63,7 +63,6 @@ const MainMenu: React.FC = () => {
 
           <div className="hidden md:block flex-1"></div>
 
-          {/* Przycisk otwierania/zamykania menu dla mniejszych ekranów */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -72,7 +71,7 @@ const MainMenu: React.FC = () => {
           </button>
         </div>
 
-        {/* Menu dla mniejszych ekranów */}
+        
         <ul
           className={`md:hidden flex flex-col items-center space-y-4 text-lg bg-cyan-500 py-4 transition-all duration-300 ${
             isMenuOpen ? 'block' : 'hidden'
