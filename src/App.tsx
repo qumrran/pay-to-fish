@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { UserContext } from './context/UserContext';
 import { UserProvider } from './context/UserContext';
 import LoginPage from './pages/Login/LoginPage';
-import RegisterPage from './pages/RegisterPage/RegisterPage';
 import MainMenu from './components/MainManu/MainMenu';
 import News from './pages/News/News';
 import Reservations from './pages/Reservations/Reservations';
@@ -30,7 +29,6 @@ const App: React.FC = () => {
         <MainMenu />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route
             path="/*"
             element={

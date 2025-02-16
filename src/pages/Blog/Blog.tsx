@@ -23,7 +23,6 @@ const Blog: React.FC = () => {
   const { slug } = useParams(); 
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedPost, setExpandedPost] = useState<BlogPost | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
