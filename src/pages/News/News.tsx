@@ -7,14 +7,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LazyLoad from 'react-lazyload';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
+import { NewsItem } from '../../types/NewsItem.types';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  content: string;
-  date: string;
-  imgUrl: string;
-}
+
 
 const News: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);

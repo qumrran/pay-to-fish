@@ -18,17 +18,10 @@ import { ClipLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaRegEdit } from 'react-icons/fa';
 import { FaRegCalendar } from "react-icons/fa";
-
 import 'react-toastify/dist/ReactToastify.css';
+import { Reservation } from '../../types/Reservation.types';
 
-interface Reservation {
-  id: string;
-  fishingSpot: string;
-  startDate: string;
-  endDate: string;
-  days: number;
-  totalCost: number;
-}
+
 
 const Reservations: React.FC = () => {
   const [fishingSpot, setFishingSpot] = useState('Łowisko1');
@@ -326,7 +319,7 @@ const Reservations: React.FC = () => {
           <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
           <ul>
             {reservations.map((reservation) => (
-              <li key={reservation.id} className="p-4 bg-white shadow-md rounded mb-4 rounded border-2 border-gray-400">
+              <li key={reservation.id} className="p-4 bg-white shadow-md mb-4 rounded border-2 border-gray-400">
                 <p>Łowisko: {reservation.fishingSpot}</p>
                 <p>Od: {reservation.startDate}</p>
                 <p>Do: {reservation.endDate}</p>

@@ -1,8 +1,7 @@
 import React from 'react';
+import { ConfirmationEmailPopupProps } from '../../../types/ConfirmationEmailPopupProps.types';
 
-interface ConfirmationEmailPopupProps {
-  onClose: () => void;
-}
+
 
 const ConfirmationEmailPopup: React.FC<ConfirmationEmailPopupProps> = ({ onClose }) => {
   return (

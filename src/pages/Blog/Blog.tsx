@@ -6,18 +6,9 @@ import LazyLoad from 'react-lazyload';
 import { SlArrowRightCircle } from 'react-icons/sl'; 
 import BackButton from '../../components/BackButton/BackButton';
 import { useParams, useNavigate } from 'react-router-dom';
+import { BlogPost } from '../../types/Blog.types';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  imgUrl: string;
-  category: string;
-  author: string;
-  slug: string;
-  tags: string[];
-}
+
 
 const Blog: React.FC = () => {
   const { slug } = useParams(); 

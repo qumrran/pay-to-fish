@@ -1,0 +1,20 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /reservations/{reservationId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    match /news/{newsId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /blog/{blogPostId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}
+

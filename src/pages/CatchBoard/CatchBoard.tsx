@@ -1,44 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { db, storage } from '../../firebase/firebaseConfig'; // Importowanie konfiguracji Firebase
+import { db, storage } from '../../firebase/firebaseConfig';
 import { UserContext } from '../../context/UserContext';
 import { collection, addDoc, query, onSnapshot, orderBy, serverTimestamp } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import imageCompression from 'browser-image-compression'; // Importowanie biblioteki kompresji
+import imageCompression from 'browser-image-compression';
 import { FaCircleUser } from 'react-icons/fa6';
 import { v4 as uuidv4 } from 'uuid';
-
-interface CatchPost {
-  id: string;
-  userId: string;
-  description: string;
-  imageUrl: string;
-  avatar: string;
-  createdAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
-}
+import { CatchPost } from '../../types/CatchPost.types';
 
 const CatchBoard: React.FC = () => {
   const userContext = useContext(UserContext);
   const user = userContext?.user;
 
-  const [description, setDescription] = useState<string>('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [posts, setPosts] = useState<CatchPost[]>([]);
 
   useEffect(() => {
     const q = query(collection(db, 'catch_board'), orderBy('createdAt', 'desc'));
-
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const catchBoardPosts: CatchPost[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatchPost[];
+      const catchBoardPosts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatchPost[];
       setPosts(catchBoardPosts);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // Funkcja do walidacji i kompresji plików
   const handleFileValidationAndCompression = async (file: File | null): Promise<File | null> => {
     if (!file) {
       alert("Nie wybrano pliku.");
@@ -51,22 +37,15 @@ const CatchBoard: React.FC = () => {
       return null;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // Limit 5MB
+    if (file.size > 5 * 1024 * 1024) {
       alert("Plik jest za duży. Maksymalny rozmiar to 5MB.");
       return null;
     }
 
-    const options = {
-      maxSizeMB: 0.3, // 300KB
-      maxWidthOrHeight: 1200,
-      useWebWorker: true,
-    };
+    const options = { maxSizeMB: 0.3, maxWidthOrHeight: 1200, useWebWorker: true };
 
     try {
-      const compressedFile = await imageCompression(file, options);
-      console.log("Oryginalny rozmiar:", file.size / 1024, "KB");
-      console.log("Skonwertowany rozmiar:", compressedFile.size / 1024, "KB");
-      return compressedFile;
+      return await imageCompression(file, options);
     } catch (error) {
       console.error("Błąd podczas kompresji obrazu:", error);
       alert("Nie udało się skompresować pliku.");
@@ -77,9 +56,7 @@ const CatchBoard: React.FC = () => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     const validatedFile = await handleFileValidationAndCompression(file);
-    if (validatedFile) {
-      setImage(validatedFile); // Przechowujemy skompresowany plik
-    }
+    if (validatedFile) setImage(validatedFile);
   };
 
   const handlePostSubmit = async (e: React.FormEvent) => {
@@ -89,13 +66,12 @@ const CatchBoard: React.FC = () => {
       return;
     }
 
-    // Upload zdjęcia do Firebase Storage
     const imageRef = ref(storage, `catch_board_images/${uuidv4()}`);
+
     try {
       const uploadTask = await uploadBytes(imageRef, image);
       const imageUrl = await getDownloadURL(uploadTask.ref);
 
-      // Dodajemy nowy post do Firestore
       await addDoc(collection(db, 'catch_board'), {
         userId: user.uid,
         description,
@@ -116,20 +92,13 @@ const CatchBoard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-4xl font-bold mb-4 text-center">Tablica Połowów</h1>
-      <p className="text-lg text-center mb-6">
-        Udostępnij swoje połowy i zobacz, co złowili inni.
-      </p>
+      <p className="text-lg text-center mb-6">Udostępnij swoje połowy i zobacz, co złowili inni.</p>
 
-      {/* Formularz dodawania posta */}
       {user && (
         <form onSubmit={handlePostSubmit} className="mb-6">
           <div>
             {user.photoURL ? (
-              <img
-                src={user.photoURL}
-                alt="Avatar"
-                className="w-12 h-12 rounded-full mb-2"
-              />
+              <img src={user.photoURL} alt="Avatar" className="w-12 h-12 rounded-full mb-2" />
             ) : (
               <FaCircleUser className="w-12 h-12 text-gray-500 mb-2" />
             )}
@@ -140,16 +109,11 @@ const CatchBoard: React.FC = () => {
             placeholder="Opisz swój połów"
             className="w-full p-2 border rounded mb-2"
           />
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="mb-2"
-          />
+          <input type="file" onChange={handleImageChange} className="mb-2" />
           <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
         </form>
       )}
 
-      {/* Lista postów */}
       <div>
         {posts.map((post) => (
           <div key={post.id} className="border p-4 mb-4 rounded shadow-md">

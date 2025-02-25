@@ -6,15 +6,9 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import LogoutButton2 from '../../components/LogoutButton2/LogoutButton2';
 import { ClipLoader } from 'react-spinners'; 
+import { Reservation } from '../../types/Reservation.types';
 
-interface Reservation {
-  id: string;
-  fishingSpot: string;
-  startDate: string;
-  endDate: string;
-  days: number;
-  totalCost: number;
-}
+
 
 const Account: React.FC = () => {
   const userContext = useContext(UserContext);
