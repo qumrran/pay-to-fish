@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, onSnapshot } from 'firebase/firestore';
-import { ClipLoader } from 'react-spinners';
 import LazyLoad from 'react-lazyload';
 import { SlArrowRightCircle } from 'react-icons/sl'; 
 import BackButton from '../../components/BackButton/BackButton';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BlogPost } from '../../types/Blog.types';
+import Loader from '../../components/Shared/Loader/Loader';
 
 
 
@@ -81,9 +81,7 @@ const Blog: React.FC = () => {
   return (
     <div className="p-4">
       {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <ClipLoader color="#3498db" size={50} loading={loading} />
-        </div>
+          <Loader/>
       ) : postToDisplay ? (
         renderExpandedPost(postToDisplay)  
       ) : (

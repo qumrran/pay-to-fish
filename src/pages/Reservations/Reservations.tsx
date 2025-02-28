@@ -20,6 +20,7 @@ import { FaRegEdit } from 'react-icons/fa';
 import { FaRegCalendar } from "react-icons/fa";
 import 'react-toastify/dist/ReactToastify.css';
 import { Reservation } from '../../types/Reservation.types';
+import Loader from '../../components/Shared/Loader/Loader';
 
 
 
@@ -205,9 +206,7 @@ const Reservations: React.FC = () => {
       />
 
       {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <ClipLoader color="#3498db" size={50} loading={loading} />
-        </div>
+          <Loader/>
       ) : (
         <>
           <form
@@ -219,7 +218,7 @@ const Reservations: React.FC = () => {
                 handleAddReservation(e);
               }
             }}
-            className="mb-8 p-4 shadow-md rounded border-2 border-gray-400"  
+            className="mb-8 p-4 shadow-md rounded border-2 border-gray-300"  
           >
             <h1 className="text-xl font-bold mb-4 flex items-center gap-2">
               {editingReservation ? (
@@ -240,7 +239,7 @@ const Reservations: React.FC = () => {
                 value={fishingSpot}
                 onChange={(e) => setFishingSpot(e.target.value)}
                 required
-                className="w-full px-3 py-2 border-2 border-gray-400 rounded bg-white text-black focus:outline-none focus:ring focus:ring-cyan-500"
+                className="w-full px-3 py-2 border-2 border-gray-300 rounded bg-white text-black focus:outline-none focus:ring focus:ring-cyan-500"
               >
                 <option value="Łowisko1">Łowisko 1</option>
                 <option value="Łowisko2">Łowisko 2</option>
@@ -255,7 +254,7 @@ const Reservations: React.FC = () => {
                 onChange={(e) => setStartDate(e.target.value)}
                 onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                 required
-                className="w-full px-3 py-2 border-2 border-gray-400 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
+                className="w-full px-3 py-2 border-2 border-gray-300 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
                 min={today}
               />
             </div>
@@ -267,7 +266,7 @@ const Reservations: React.FC = () => {
                 onChange={(e) => setEndDate(e.target.value)}
                 onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                 required
-                className="w-full px-3 py-2 border-2 border-gray-400 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
+                className="w-full px-3 py-2 border-2 border-gray-300 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
                 min={startDate || today}
               />
             </div>
@@ -319,10 +318,11 @@ const Reservations: React.FC = () => {
           <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
           <ul>
             {reservations.map((reservation) => (
-              <li key={reservation.id} className="p-4 bg-white shadow-md mb-4 rounded border-2 border-gray-400">
+              <li key={reservation.id} className="p-4 bg-white shadow-md mb-4 rounded border-2 border-gray-300">
                 <p>Łowisko: {reservation.fishingSpot}</p>
                 <p>Od: {reservation.startDate}</p>
                 <p>Do: {reservation.endDate}</p>
+                <p>Liczba dni: {reservation.days}</p>
                 <p>Koszt: {reservation.totalCost} zł</p>
                 <div className="mt-2">
                   <button

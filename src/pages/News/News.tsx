@@ -2,12 +2,12 @@ import React, { useState, useContext, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { UserContext } from '../../context/UserContext';
-import { ClipLoader } from 'react-spinners';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LazyLoad from 'react-lazyload';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import { NewsItem } from '../../types/NewsItem.types';
+import Loader from '../../components/Shared/Loader/Loader';
 
 
 
@@ -46,9 +46,7 @@ const News: React.FC = () => {
       />
 
       {loading ? (
-        <div className="flex justify-center items-center h-32">
-          <ClipLoader color="#3498db" size={50} loading={loading} />
-        </div>
+          <Loader/>
       ) : (
         <>
           <ul className="space-y-4">
