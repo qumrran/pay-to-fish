@@ -1,7 +1,7 @@
 import React from 'react';
 import { BsFillTelephoneFill, BsEnvelopeFill, BsFacebook, BsInstagram } from 'react-icons/bs';
 import { FaFish } from 'react-icons/fa';
-import SendButton from '../../components/SendButton.tsx/SendButton';
+import SendButton from '../../components/Shared/SendButton.tsx/SendButton';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
