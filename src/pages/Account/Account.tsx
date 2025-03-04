@@ -1,64 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-import { db } from '../../firebase/firebaseConfig';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import LogoutButton2 from '../../components/LogoutButton2/LogoutButton2';
-import { Reservation } from '../../types/Reservation.types';
+import { ClipLoader } from 'react-spinners'; 
 import ReservationsList from '../../components/Shared/ReservationsList/ReservationsList';
 import UserProfile from '../../components/Account/UserProfile/UserProfile';
-import Loader from '../../components/Shared/Loader/Loader';
+import { useShowReservations } from '../../hooks/useShowReservations';
 
 const Account: React.FC = () => {
-	const userContext = useContext(UserContext);
-	const user = userContext?.user;
-	const navigate = useNavigate();
+  const userContext = useContext(UserContext);
+  const user = userContext?.user;
+  const navigate = useNavigate();
 
-	const [loading, setLoading] = useState(true);
-	const [reservations, setReservations] = useState<Reservation[]>([]);
+  const { reservations, loading } = useShowReservations(user?.uid);
 
-	useEffect(() => {
-		if (user) {
-			const reservationsRef = collection(db, 'reservations');
-			const q = query(reservationsRef, where('userId', '==', user.uid));
+  const handleEditClick = (reservationId: string) => {
+    navigate(`/reservations/${reservationId}`);
+  };
 
-			const unsubscribe = onSnapshot(q, (querySnapshot) => {
-				const userReservations: Reservation[] = querySnapshot.docs.map(
-					(doc) =>
-						({
-							id: doc.id,
-							...doc.data(),
-						} as Reservation)
-				);
-				setReservations(userReservations);
-				setLoading(false);
-			});
+  return (
+    <div className="min-h-screen bg-white p-6">
+      <div className="flex flex-col items-center">
+        {user && <UserProfile user={user} />}
 
-			return () => unsubscribe();
-		}
-	}, [user?.uid]);
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <ClipLoader color="#3498db" size={50} loading={loading} />
+          </div>
+        ) : (
+          <ReservationsList reservations={reservations} onEdit={handleEditClick} />
+        )}
 
-	const handleEditClick = (reservationId: string) => {
-		navigate(`/reservations/${reservationId}`);
-	};
-
-	return (
-		<div className='min-h-screen bg-white p-6'>
-			<div className='flex flex-col items-center'>
-				<UserProfile user={user} />
-
-				{loading ? (
-					<Loader />
-				) : (
-					<ReservationsList
-						reservations={reservations}
-						onEdit={handleEditClick}
-					/>
-				)}
-				<LogoutButton2 />
-			</div>
-		</div>
-	);
+        <LogoutButton2 />
+      </div>
+    </div>
+  );
 };
 
 export default Account;
