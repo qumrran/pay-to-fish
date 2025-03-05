@@ -1,13 +1,13 @@
 import React from 'react';
-import type { BlogPost } from '../../../types/Blog.types';
 import { useNavigate } from 'react-router-dom';
+import { BlogPost } from '../../../types/Blog.types';
 import BackButton from '../../Shared/BackButton/BackButton';
 
-interface BlogPostProps {
+interface Props {
   post: BlogPost;
 }
 
-const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
+const BlogPostExpanded: React.FC<Props> = ({ post }) => {
   const navigate = useNavigate();
 
   return (
@@ -22,10 +22,15 @@ const BlogPost: React.FC<BlogPostProps> = ({ post }) => {
           <span>Autor: {post.author}</span>
           <span className="ml-4">Kategoria: {post.category}</span>
         </div>
+        <div className="flex flex-wrap">
+          {post.tags.map((tag, index) => (
+            <span key={index} className="bg-gray-200 text-gray-600 text-xs py-1 px-2 rounded-full mr-2 mb-2">{tag}</span>
+          ))}
+        </div>
         <BackButton onClick={() => navigate('/blog')} />
       </div>
     </div>
   );
 };
 
-export default BlogPost;
+export default BlogPostExpanded;

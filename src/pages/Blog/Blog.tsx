@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useFetchBlogPosts } from '../../hooks/useFetchBlogPosts';
 import Loader from '../../components/Shared/Loader/Loader';
-import BlogList from '../../components/Blog/BlogList/BlogList';
-import BlogPost from '../../components/Blog/BlogPost/BlogPost';
+import useBlogPosts from '../../hooks/useBlogPosts';
+import BlogPostExpanded from '../../components/Blog/BlogPostExpanded/BlogPostExpanded';
+import BlogPostList from '../../components/Blog/BlogPostList/BlogPostList';
 
 const Blog: React.FC = () => {
   const { slug } = useParams();
-  const { posts, loading } = useFetchBlogPosts();
-  const postToDisplay = posts.find((post) => post.slug === slug);
+  const { posts, loading } = useBlogPosts();
+  
+  const postToDisplay = useMemo(() => posts.find(post => post.slug === slug), [posts, slug]);
 
   return (
     <div className="p-4">
-      {loading ? <Loader /> : postToDisplay ? <BlogPost post={postToDisplay} /> : <BlogList posts={posts} />}
+      {loading ? <Loader /> : postToDisplay ? <BlogPostExpanded post={postToDisplay} /> : <BlogPostList posts={posts} />}
     </div>
   );
 };

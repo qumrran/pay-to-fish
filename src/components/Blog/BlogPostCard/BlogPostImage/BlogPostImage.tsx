@@ -1,14 +1,12 @@
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 
-interface BlogImageProps {
+interface Props {
   imgUrl: string;
   title: string;
 }
 
-const BlogImage: React.FC<BlogImageProps> = ({ imgUrl, title }) => {
-  if (!imgUrl) return null;
-
+const BlogPostImage: React.FC<Props> = ({ imgUrl, title }) => {
   return (
     <LazyLoad height={200} offset={100}>
       <img src={imgUrl} alt={title} className="w-full h-48 object-cover" />
@@ -16,4 +14,4 @@ const BlogImage: React.FC<BlogImageProps> = ({ imgUrl, title }) => {
   );
 };
 
-export default BlogImage;
+export default BlogPostImage;
