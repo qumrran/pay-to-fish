@@ -14,15 +14,12 @@ import {
 } from 'firebase/firestore';
 import { UserContext } from '../../context/UserContext';
 import { useParams } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaRegEdit } from 'react-icons/fa';
 import { FaRegCalendar } from "react-icons/fa";
 import 'react-toastify/dist/ReactToastify.css';
 import { Reservation } from '../../types/Reservation.types';
 import Loader from '../../components/Shared/Loader/Loader';
-
-
 
 const Reservations: React.FC = () => {
   const [fishingSpot, setFishingSpot] = useState('Łowisko1');
@@ -33,6 +30,7 @@ const Reservations: React.FC = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<string | null>(null); // To track reservation id for delete confirmation
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext) || {};
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -162,6 +160,7 @@ const Reservations: React.FC = () => {
       const reservationRef = doc(db, 'reservations', id);
       await deleteDoc(reservationRef);
       toast.success('Rezerwacja została usunięta.');
+      setShowDeleteConfirmation(null); // Close confirmation after deletion
     } catch (error) {
       toast.error('Błąd podczas usuwania rezerwacji.');
     } finally {
@@ -191,6 +190,10 @@ const Reservations: React.FC = () => {
     setDays(0);
     setTotalCost(0);
     setShowConfirmation(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(null); // Cancel delete confirmation
   };
 
   return (
@@ -315,6 +318,29 @@ const Reservations: React.FC = () => {
             </div>
           )}
 
+          {/* Delete confirmation dialog */}
+          {showDeleteConfirmation && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white rounded p-6 shadow-lg max-w-sm w-full">
+                <p className="text-lg font-bold mb-4">Czy na pewno chcesz usunąć tę rezerwację?</p>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => handleDeleteReservation(showDeleteConfirmation)}
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Tak
+                  </button>
+                  <button
+                    onClick={handleCancelDelete}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Nie
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
           <ul>
             {reservations.map((reservation) => (
@@ -332,7 +358,7 @@ const Reservations: React.FC = () => {
                     Edytuj
                   </button>
                   <button
-                    onClick={() => handleDeleteReservation(reservation.id)}
+                    onClick={() => setShowDeleteConfirmation(reservation.id)} // Show delete confirmation
                     className="bg-red-500 text-white py-1 px-2 rounded ml-2"
                   >
                     Usuń
