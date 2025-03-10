@@ -100,16 +100,13 @@ const Reservations: React.FC = () => {
 
 	const handleAddReservation = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!user) {
-			toast.error('Musisz być zalogowany, aby dokonać rezerwacji.');
-			return;
-		}
+		
 
 		try {
 			setLoading(true);
 			const reservationRef = collection(db, 'reservations');
 			await addDoc(reservationRef, {
-				userId: user.uid,
+				userId: user!.uid,
 				fishingSpot,
 				startDate,
 				endDate,
@@ -131,11 +128,11 @@ const Reservations: React.FC = () => {
 	};
 
 	const handleEditReservation = async () => {
-		if (!user || !editingReservation) {
-			toast.error('Musisz być zalogowany i edytować istniejącą rezerwację.');
+		if (!editingReservation) {
+			toast.error('Nie znaleziono rezerwacji do edycji.');
 			return;
 		}
-
+	
 		try {
 			setLoading(true);
 			const reservationRef = doc(db, 'reservations', editingReservation.id);
@@ -152,9 +149,10 @@ const Reservations: React.FC = () => {
 			toast.error('Nie udało się zaktualizować rezerwacji.');
 		} finally {
 			setLoading(false);
-			setActionConfirmation(null); 
+			setActionConfirmation(null);
 		}
 	};
+	
 
 	const handleDeleteReservation = async () => {
 		if (!reservationToDelete) return;
