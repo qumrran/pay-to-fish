@@ -22,6 +22,8 @@ import Loader from '../../components/Shared/Loader/Loader';
 import ConfirmationDialog from '../../components/Reservations/ConfirmationDialog/ConfirmationDialog';
 import ReservationForm from '../../components/Reservations/ReservationForm/ReservationForm';
 import ReservationList from '../../components/Reservations/ReservationList/ReservationList';
+import { calculateCost } from '../../utils/calculateCost';
+
 
 const Reservations: React.FC = () => {
 	const [fishingSpot, setFishingSpot] = useState('Łowisko1');
@@ -44,24 +46,14 @@ const Reservations: React.FC = () => {
 
 	const today = new Date().toISOString().split('T')[0];
 
-	const calculateCost = (start: string, end: string) => {
-		if (start && end) {
-			const diffTime = new Date(end).getTime() - new Date(start).getTime();
-			const calculatedDays = Math.max(
-				Math.ceil(diffTime / (1000 * 60 * 60 * 24)),
-				1
-			);
-			setDays(calculatedDays);
-			setTotalCost(calculatedDays * 50);
-		} else {
-			setDays(0);
-			setTotalCost(0);
-		}
-	};
+
 
 	useEffect(() => {
-		calculateCost(startDate, endDate);
+		const { days, totalCost } = calculateCost(startDate, endDate);
+		setDays(days);
+		setTotalCost(totalCost);
 	}, [startDate, endDate]);
+	
 
 	useEffect(() => {
 		if (!user) return;
