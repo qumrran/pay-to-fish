@@ -11,10 +11,9 @@ interface ReservationFormProps {
   totalCost: number;
   days: number;
   editingReservation: boolean;
-  handleSubmit: (e: React.FormEvent) => void;
   handleCancelEdit: () => void;
-  handleShowConfirmation: (action: 'edit') => void; 
-  handleAddReservation: (e: React.FormEvent) => void; 
+  handleShowConfirmation: (action: 'edit' | 'delete') => void; 
+  handleAddReservation: (e: React.FormEvent) => void;
   today: string;
 }
 
