@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
 				if (fullName.trim()) {
 					await updateProfile(userCredential.user, { displayName: fullName });
 				}
-
+                await auth.signOut();
 				setShowPopup(true);
 			} else {
 				const userCredential = await signInWithEmailAndPassword(auth, email, password);
