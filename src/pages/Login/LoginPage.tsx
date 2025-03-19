@@ -13,6 +13,9 @@ import { auth } from '../../firebase/firebaseConfig';
 import ConfirmationEmailPopup from '../../components/LoginPage/ConfirmationEmailPopup/ConfirmationEmailPopup';
 import AuthButton from '../../components/LoginPage/AuthButton/AuthButton';
 import GoogleAuthButton from '../../components/LoginPage/GoogleAuthButton/GoogleAuthButton';
+import ForgotPasswordButton from '../../components/LoginPage/ForgotPasswordButton/ForgotPasswordButton';
+import PasswordResetForm from '../../components/LoginPage/PasswordResetForm/PasswordResetForm';
+import AuthSwitch from '../../components/LoginPage/AuthSwitch/AuthSwitch';
 
 const LoginPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -146,63 +149,22 @@ const LoginPage: React.FC = () => {
 				<GoogleAuthButton onClick={handleGoogleAuth} />
 
 				{!isRegistering && !isResettingPassword && (
-					<div className='mt-4 text-center'>
-						<button
-							className='text-cyan-500 underline'
-							onClick={() => setIsResettingPassword(true)}
-						>
-							Zapomniałeś hasła?
-						</button>
-					</div>
+					<ForgotPasswordButton onClick={() => setIsResettingPassword(true)} />
 				)}
 
 				{isResettingPassword && (
-					<div className='mt-4 text-center'>
-						<input
-							type='email'
-							placeholder='Podaj swój email'
-							className='w-full p-2 border mb-2 focus:outline-none focus:ring focus:ring-cyan-500 rounded'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-						/>
-						<button
-							className='w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 mb-2 rounded'
-							onClick={handlePasswordReset}
-						>
-							Wyślij link do resetowania hasła
-						</button>
-						<button
-							className='w-full bg-black hover:bg-gray-800 text-white py-2 rounded'
-							onClick={() => setIsResettingPassword(false)}
-						>
-							Anuluj
-						</button>
-					</div>
+					<PasswordResetForm
+						email={email}
+						setEmail={setEmail}
+						onReset={handlePasswordReset}
+						onCancel={() => setIsResettingPassword(false)}
+					/>
 				)}
 
-				<div className='mt-4 text-center'>
-					{isRegistering ? (
-						<p>
-							Masz już konto?{' '}
-							<button
-								className='text-cyan-500 underline'
-								onClick={() => handleModeChange(false)}
-							>
-								Zaloguj się
-							</button>
-						</p>
-					) : (
-						<p>
-							Nie masz konta?{' '}
-							<button
-								className='text-cyan-500 underline'
-								onClick={() => handleModeChange(true)}
-							>
-								Zarejestruj się
-							</button>
-						</p>
-					)}
-				</div>
+				<AuthSwitch
+					isRegistering={isRegistering}
+					onSwitch={() => handleModeChange(!isRegistering)}
+				/>
 			</div>
 
 			{showPopup && <ConfirmationEmailPopup onClose={closePopup} />}
