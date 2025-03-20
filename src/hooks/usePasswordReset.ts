@@ -14,7 +14,7 @@ const usePasswordReset = () => {
     }
     try {
       await sendPasswordResetEmail(auth, email);
-      setSuccessMessage('Link do resetowania hasła został wysłany na Twój email.');
+      setSuccessMessage('Jeśli podany adres e-mail istnieje w bazie, link do resetowania hasła został wysłany.');
       setError('');
       setIsResettingPassword(false);
     } catch (err: any) {
