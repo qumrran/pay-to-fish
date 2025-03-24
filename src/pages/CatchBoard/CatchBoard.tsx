@@ -7,6 +7,8 @@ import imageCompression from 'browser-image-compression';
 import { FaCircleUser } from 'react-icons/fa6';
 import { v4 as uuidv4 } from 'uuid';
 import { CatchPost } from '../../types/CatchPost.types';
+import Loader from '../../components/Shared/Loader/Loader'; 
+import LazyLoad from 'react-lazyload';
 
 const CatchBoard: React.FC = () => {
   const userContext = useContext(UserContext);
@@ -15,12 +17,14 @@ const CatchBoard: React.FC = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [posts, setPosts] = useState<CatchPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); 
 
   useEffect(() => {
     const q = query(collection(db, 'catch_board'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const catchBoardPosts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatchPost[];
       setPosts(catchBoardPosts);
+      setLoading(false); 
     });
     return () => unsubscribe();
   }, []);
@@ -56,7 +60,11 @@ const CatchBoard: React.FC = () => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     const validatedFile = await handleFileValidationAndCompression(file);
-    if (validatedFile) setImage(validatedFile);
+    if (validatedFile) {
+      setImage(validatedFile);
+    } else {
+      console.log("Invalid file or error during compression.");
+    }
   };
 
   const handlePostSubmit = async (e: React.FormEvent) => {
@@ -94,42 +102,55 @@ const CatchBoard: React.FC = () => {
       <h1 className="text-4xl font-bold mb-4 text-center">Tablica Połowów</h1>
       <p className="text-lg text-center mb-6">Udostępnij swoje połowy i zobacz, co złowili inni.</p>
 
-      {user && (
-        <form onSubmit={handlePostSubmit} className="mb-6">
-          <div>
-            {user.photoURL ? (
-              <img src={user.photoURL} alt="Avatar" className="w-12 h-12 rounded-full mb-2" />
-            ) : (
-              <FaCircleUser className="w-12 h-12 text-gray-500 mb-2" />
-            )}
-          </div>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Opisz swój połów"
-            className="w-full p-2 border rounded mb-2"
-          />
-          <input type="file" onChange={handleImageChange} className="mb-2" />
-          <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
-        </form>
-      )}
+      {loading ? (
+        <Loader /> 
+      ) : (
+        <>
+          {user && (
+            <form onSubmit={handlePostSubmit} className="max-w-3xl mx-auto mb-6">
+              <div>
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="Avatar" className="w-12 h-12 rounded-full mb-2" />
+                ) : (
+                  <FaCircleUser className="w-12 h-12 text-gray-500 mb-2" />
+                )}
+              </div>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Opisz swój połów"
+                className="w-full p-2 border rounded mb-2"
+              />
+              <input type="file" onChange={handleImageChange} className="mb-2" />
+              <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
+            </form>
+          )}
 
-      <div>
-        {posts.map((post) => (
-          <div key={post.id} className="border p-4 mb-4 rounded shadow-md">
-            <div className="flex items-center mb-4">
-              {post.avatar ? (
-                <img src={post.avatar} alt="Avatar" className="w-10 h-10 rounded-full mr-2" />
-              ) : (
-                <FaCircleUser className="w-10 h-10 text-gray-500 mr-2" />
-              )}
-              <p className="font-bold">{post.userId}</p>
-            </div>
-            <img src={post.imageUrl} alt="Połów" className="w-full h-64 object-cover mb-4" />
-            <p>{post.description}</p>
+          <div className="max-w-3xl mx-auto">
+            {posts.map((post) => (
+              <div key={post.id} className="border p-4 mb-4 rounded shadow-md">
+                <div className="flex items-center mb-4">
+                  {post.avatar ? (
+                    <img src={post.avatar} alt="Avatar" className="w-10 h-10 rounded-full mr-2" />
+                  ) : (
+                    <FaCircleUser className="w-10 h-10 text-gray-500 mr-2" />
+                  )}
+                  <p className="font-bold">{post.userId}</p>
+                </div>
+                <LazyLoad height={200} offset={100}>
+                  <img 
+                    src={post.imageUrl} 
+                    alt="Połów" 
+                    className="w-full mb-4 object-cover"
+                    style={{ aspectRatio: '16 / 9' }} 
+                  />
+                </LazyLoad>
+                <p>{post.description}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 };

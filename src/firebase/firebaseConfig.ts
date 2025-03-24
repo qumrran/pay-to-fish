@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey: 'AIzaSyA2VkrsrzOj1Lag-dIMghDMc5XPm_ftfRc',
   authDomain: 'pay-to-fish.firebaseapp.com',
   projectId: 'pay-to-fish',
-  storageBucket: 'pay-to-fish.appspot.com',
+  storageBucket: 'pay-to-fish.firebasestorage.app',
   messagingSenderId: '412196570739',
   appId: '1:412196570739:web:b98b83ce401c8c6c968c06',
   measurementId: 'G-831NK6KX5H',
