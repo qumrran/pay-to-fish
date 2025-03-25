@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { UserContext } from '../../context/UserContext';
-import { collection, addDoc, query, onSnapshot, orderBy, serverTimestamp } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { collection, addDoc, query, onSnapshot, orderBy, serverTimestamp, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes, deleteObject } from 'firebase/storage';
 import imageCompression from 'browser-image-compression';
 import { FaCircleUser } from 'react-icons/fa6';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,14 +17,19 @@ const CatchBoard: React.FC = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [posts, setPosts] = useState<CatchPost[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedLake, setSelectedLake] = useState<string>(''); 
+  const [editPostId, setEditPostId] = useState<string | null>(null); 
+  const [editDescription, setEditDescription] = useState<string>('');
+  const [postToDelete, setPostToDelete] = useState<string | null>(null); 
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<boolean>(false); 
 
   useEffect(() => {
     const q = query(collection(db, 'catch_board'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const catchBoardPosts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CatchPost[];
       setPosts(catchBoardPosts);
-      setLoading(false); 
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -69,7 +74,7 @@ const CatchBoard: React.FC = () => {
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !image || !user) {
+    if (!description || !image || !user || !selectedLake) {
       alert("Wszystkie pola są wymagane.");
       return;
     }
@@ -82,18 +87,88 @@ const CatchBoard: React.FC = () => {
 
       await addDoc(collection(db, 'catch_board'), {
         userId: user.uid,
+        userName: user.displayName || 'Anonimowy użytkownik',
         description,
         imageUrl,
         avatar: user.photoURL || '',
         createdAt: serverTimestamp(),
+        lake: selectedLake, 
       });
 
       setDescription('');
       setImage(null);
+      setSelectedLake('');
       alert("Post został dodany!");
     } catch (error) {
       console.error("Błąd przy dodawaniu posta:", error);
       alert("Nie udało się dodać posta.");
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!postToDelete) {
+      alert("Brak posta do usunięcia.");
+      return;
+    }
+
+    try {
+      const postDoc = doc(db, 'catch_board', postToDelete);
+      const postSnapshot = await getDoc(postDoc);
+      const postData = postSnapshot.data();
+
+      if (postData?.imageUrl) {
+        const imageRef = ref(storage, postData.imageUrl);
+        await deleteObject(imageRef);
+      }
+
+      await deleteDoc(postDoc);
+      setPostToDelete(null);
+      setShowDeleteConfirmation(false);
+      alert("Post został usunięty.");
+    } catch (error) {
+      console.error("Błąd przy usuwaniu posta:", error);
+      alert("Nie udało się usunąć posta.");
+    }
+  };
+
+  const handleEditPost = (postId: string, currentDescription: string) => {
+    setEditPostId(postId);
+    setEditDescription(currentDescription);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editDescription || !editPostId) return;
+
+    try {
+      await updateDoc(doc(db, 'catch_board', editPostId), {
+        description: editDescription,
+        updatedAt: serverTimestamp(),
+      });
+
+      setEditPostId(null);
+      setEditDescription('');
+      alert("Post został zaktualizowany!");
+    } catch (error) {
+      console.error("Błąd przy edytowaniu posta:", error);
+      alert("Nie udało się edytować posta.");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditPostId(null);
+    setEditDescription('');
+  };
+
+  const getLakeText = (lake: string) => {
+    switch (lake) {
+      case 'Łowisko 1':
+        return 'Zdjęcie zostało wykonane na łowisku numer 1';
+      case 'Łowisko 2':
+        return 'Zdjęcie zostało wykonane na łowisku numer 2';
+      case 'Łowisko 3':
+        return 'Zdjęcie zostało wykonane na łowisku numer 3';
+      default:
+        return 'Brak informacji o łowisku';
     }
   };
 
@@ -103,7 +178,7 @@ const CatchBoard: React.FC = () => {
       <p className="text-lg text-center mb-6">Udostępnij swoje połowy i zobacz, co złowili inni.</p>
 
       {loading ? (
-        <Loader /> 
+        <Loader />
       ) : (
         <>
           {user && (
@@ -122,6 +197,20 @@ const CatchBoard: React.FC = () => {
                 className="w-full p-2 border rounded mb-2"
               />
               <input type="file" onChange={handleImageChange} className="mb-2" />
+              <div className="mb-4">
+                <label htmlFor="lake" className="block text-sm font-medium text-gray-700">Wybierz łowisko</label>
+                <select
+                  id="lake"
+                  value={selectedLake}
+                  onChange={(e) => setSelectedLake(e.target.value)}
+                  className="mt-1 block w-full p-2 border rounded"
+                >
+                  <option value="">-- Wybierz łowisko --</option>
+                  <option value="Łowisko 1">Łowisko 1</option>
+                  <option value="Łowisko 2">Łowisko 2</option>
+                  <option value="Łowisko 3">Łowisko 3</option>
+                </select>
+              </div>
               <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
             </form>
           )}
@@ -135,20 +224,86 @@ const CatchBoard: React.FC = () => {
                   ) : (
                     <FaCircleUser className="w-10 h-10 text-gray-500 mr-2" />
                   )}
-                  <p className="font-bold">{post.userId}</p>
+                  <p className="font-bold">{post.userName || 'Anonimowy użytkownik'}</p>
                 </div>
                 <LazyLoad height={200} offset={100}>
                   <img 
                     src={post.imageUrl} 
                     alt="Połów" 
-                    className="w-full mb-4 object-cover"
-                    style={{ aspectRatio: '16 / 9' }} 
+                    className="w-full h-auto mb-4 rounded"
                   />
                 </LazyLoad>
-                <p>{post.description}</p>
+                {editPostId === post.id ? (
+                  <>
+                    <textarea
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="w-full p-2 border rounded mb-2"
+                    />
+                    <div className="mt-4">
+                      <button onClick={handleSaveEdit} className="bg-green-500 text-white py-1 px-4 rounded mr-2">
+                        Zapisz zmiany
+                      </button>
+                      <button onClick={handleCancelEdit} className="bg-gray-500 text-white py-1 px-4 rounded">
+                        Anuluj
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <p>{post.description}</p>
+                )}
+                <p className="text-sm text-gray-500">
+                  Dodano: {post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString() : 'Brak daty'}
+                </p>
+                <p className="text-sm text-gray-500">{getLakeText(post.lake)}</p>
+
+                {user && user.uid === post.userId && (
+                  <>
+                    {editPostId === post.id ? null : (
+                      <button 
+                        onClick={() => handleEditPost(post.id, post.description)} 
+                        className="mt-4 bg-blue-500 text-white py-1 px-4 rounded"
+                      >
+                        Edytuj post
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => {
+                        setPostToDelete(post.id);
+                        setShowDeleteConfirmation(true);
+                      }} 
+                      className="mt-4 ml-2 bg-red-500 text-white py-1 px-4 rounded"
+                    >
+                      Usuń post
+                    </button>
+                  </>
+                )}
               </div>
             ))}
           </div>
+
+         
+          {showDeleteConfirmation && (
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+              <div className="bg-white p-6 rounded shadow-lg">
+                <p>Czy na pewno chcesz usunąć ten post?</p>
+                <div className="mt-4">
+                  <button 
+                    onClick={handleDeletePost} 
+                    className="bg-red-500 text-white py-1 px-4 rounded mr-2"
+                  >
+                    Tak, usuń
+                  </button>
+                  <button 
+                    onClick={() => setShowDeleteConfirmation(false)} 
+                    className="bg-gray-500 text-white py-1 px-4 rounded"
+                  >
+                    Anuluj
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
