@@ -1,13 +1,7 @@
 import React from 'react';
+import { PostHeaderProps } from '../../../../types/PostHeader.types';
 
-interface Props {
-  title: string;
-  date: string;
-  author: string;
-  category: string;
-}
-
-const PostHeader: React.FC<Props> = ({ title, date, author, category }) => (
+const PostHeader: React.FC<PostHeaderProps> = ({ title, date, author, category }) => (
   <>
     <h3 className="font-semibold text-xl mb-2 line-clamp-2 overflow-hidden text-ellipsis font-serif" title={title}>
       {title}

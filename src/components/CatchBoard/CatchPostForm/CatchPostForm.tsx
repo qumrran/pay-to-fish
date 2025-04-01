@@ -1,8 +1,11 @@
-
 import React, { useContext, useState } from 'react';
 import { FaCircleUser } from 'react-icons/fa6';
 import { UserContext } from '../../../context/UserContext';
 import useImageValidation from '../../../hooks/useImageValidation';
+import SubmitPhotoButton from './SubmitPhotoButton/SubmitPhotoButton';
+
+
+
 
 const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: string) => void }> = ({ onSubmit }) => {
   const { user } = useContext(UserContext) || {};
@@ -13,7 +16,7 @@ const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: stri
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !image || !lake) return alert("Wypełnij wszystkie pola.");
+    if (!description || !image || !lake) return alert('Wypełnij wszystkie pola.');
     onSubmit(description, image, lake);
     setDescription('');
     setImage(null);
@@ -52,7 +55,8 @@ const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: stri
         <option value="Łowisko 2">Łowisko 2</option>
         <option value="Łowisko 3">Łowisko 3</option>
       </select>
-      <button type="submit" className="bg-blue-500 text-white py-1 px-4 rounded">Dodaj połów</button>
+
+      <SubmitPhotoButton onClick={handleSubmit} />
     </form>
   );
 };

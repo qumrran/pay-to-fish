@@ -1,23 +1,9 @@
-
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 import { FaCircleUser } from 'react-icons/fa6';
-import { CatchPost } from '../../../types/CatchPost.types'
+import { CatchPostItemProps } from '../../../types/CatchPostItem.types';
 
-interface Props {
-  post: CatchPost;
-  isEditing: boolean;
-  editDescription: string;
-  setEditDescription: (val: string) => void;
-  onEdit: () => void;
-  onSave: () => void;
-  onCancel: () => void;
-  onDelete: () => void;
-  currentUserId?: string;
-  getLakeText: (lake: string) => string;
-}
-
-const CatchPostItem: React.FC<Props> = ({
+const CatchPostItem: React.FC<CatchPostItemProps> = ({
   post, isEditing, editDescription, setEditDescription,
   onEdit, onSave, onCancel, onDelete,
   currentUserId, getLakeText
