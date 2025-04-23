@@ -22,7 +22,7 @@ const CatchPostItem: React.FC<CatchPostItemProps> = ({
 	const isOwner = currentUserId === post.userId;
 
 	return (
-		<div className='border p-4 mb-4 rounded shadow-md'>
+		<div className='border-2 border-gray-300  p-4 mb-4 rounded shadow-md bg-gray-50'>
 			<div className='flex items-center mb-4'>
 				{post.avatar ? (
 					<img

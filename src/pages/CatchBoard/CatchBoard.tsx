@@ -12,69 +12,62 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CatchBoard: React.FC = () => {
-  const { user } = useContext(UserContext) || {};
-  const {
-    posts,
-    loading,
-    addPost,
-    deletePost,
-    updateDescription,
-  } = useCatchBoard(user);
+	const { user } = useContext(UserContext) || {};
+	const { posts, loading, addPost, deletePost, updateDescription } =
+		useCatchBoard(user);
 
-  const {
-    editPostId,
-    editDescription,
-    setEditDescription,
-    startEditing,
-    cancelEditing,
-    saveEdit,
-    postToDelete,
-    setPostToDelete,
-    confirmDelete,
-  } = usePostEditor(updateDescription, deletePost);
+	const {
+		editPostId,
+		editDescription,
+		setEditDescription,
+		startEditing,
+		cancelEditing,
+		saveEdit,
+		postToDelete,
+		setPostToDelete,
+		confirmDelete,
+	} = usePostEditor(updateDescription, deletePost);
 
-  const { handleAddPost } = useAddPost(addPost);
+	const { handleAddPost } = useAddPost(addPost);
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <ToastContainer position="top-center" autoClose={2000} theme="dark" />
+	return (
+		<div className='min-h-screen bg-white p-6'>
+			<ToastContainer position='top-center' autoClose={2000} theme='dark' />
 
-      <h1 className="text-4xl font-bold mb-4 text-center">Tablica Połowów</h1>
+			{loading ? (
+				<Loader />
+			) : (
+				<>
+					{user && <CatchPostForm onSubmit={handleAddPost} />}
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          {user && <CatchPostForm onSubmit={handleAddPost} />}
+					<div className='max-w-3xl mx-auto'>
+						{posts.map((post) => (
+							<CatchPostItem
+								key={post.id}
+								post={post}
+								isEditing={editPostId === post.id}
+								editDescription={editDescription}
+								setEditDescription={setEditDescription}
+								onEdit={() => startEditing(post.id, post.description)}
+								onSave={saveEdit}
+								onCancel={cancelEditing}
+								onDelete={() => setPostToDelete(post.id)}
+								currentUserId={user?.uid}
+								getLakeText={getLakeText}
+							/>
+						))}
+					</div>
 
-          <div className="max-w-3xl mx-auto">
-            {posts.map(post => (
-              <CatchPostItem
-                key={post.id}
-                post={post}
-                isEditing={editPostId === post.id}
-                editDescription={editDescription}
-                setEditDescription={setEditDescription}
-                onEdit={() => startEditing(post.id, post.description)}
-                onSave={saveEdit}
-                onCancel={cancelEditing}
-                onDelete={() => setPostToDelete(post.id)}
-                currentUserId={user?.uid}
-                getLakeText={getLakeText}
-              />
-            ))}
-          </div>
-
-          {postToDelete && (
-            <ConfirmDeleteModal
-              onConfirm={confirmDelete}
-              onCancel={() => setPostToDelete(null)}
-            />
-          )}
-        </>
-      )}
-    </div>
-  );
+					{postToDelete && (
+						<ConfirmDeleteModal
+							onConfirm={confirmDelete}
+							onCancel={() => setPostToDelete(null)}
+						/>
+					)}
+				</>
+			)}
+		</div>
+	);
 };
 
 export default CatchBoard;

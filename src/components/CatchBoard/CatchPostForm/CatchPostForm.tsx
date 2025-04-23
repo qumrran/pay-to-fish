@@ -13,16 +13,28 @@ const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: stri
   const { formData, handleChange, handleImageChange, handleSubmit } = useCatchPostForm(onSubmit);
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto mb-6">
-      <UserAvatar photoURL={user?.photoURL ?? undefined} />
-
+    <form
+      onSubmit={handleSubmit}
+      className='mb-8 p-4 shadow-md rounded border-2 border-gray-300 max-w-3xl mx-auto bg-gray-50'
+    >
+      <h1 className='text-3xl font-bold mb-4 text-center'>Tablica Połowów</h1>
+      
+      <div className='flex items-center mb-4'>
+        <UserAvatar photoURL={user?.photoURL ?? undefined} />
+      </div>
+      
       <DescriptionTextarea value={formData.description} onChange={(e) => handleChange('description')(e.target.value)} />
       <PhotoUploadButton onImageChange={handleImageChange} />
 
-      {formData.image && <UploadedImagePreview image={formData.image} onCancel={() => handleChange('image')(null)} />}
+      {formData.image && (
+        <UploadedImagePreview image={formData.image} onCancel={() => handleChange('image')(null)} />
+      )}
 
       <LakeSelect value={formData.lake} onChange={(e) => handleChange('lake')(e.target.value)} />
-      <SubmitPhotoButton onClick={handleSubmit} />
+      
+      
+        <SubmitPhotoButton onClick={handleSubmit} />
+   
     </form>
   );
 };

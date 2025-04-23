@@ -10,7 +10,7 @@ const LakeSelect: React.FC<LakeSelectProps> = ({ value, onChange }) => {
     <select
       value={value}
       onChange={onChange}
-      className="block w-full p-2 border rounded mt-3 mb-4"
+      className="block p-2 border rounded mt-3 mb-4 w-56"
     >
       <option value="">-- Wybierz łowisko --</option>
       <option value="Łowisko 1">Łowisko 1</option>
