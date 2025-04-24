@@ -1,12 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { toast } from 'react-toastify';
 import useImageValidation from './useImageValidation';
-
-interface FormData {
-  description: string;
-  image: File | null;
-  lake: string;
-}
+import { FormData } from '../types/FormData.types';
 
 export const useCatchPostForm = (onSubmit: (desc: string, image: File, lake: string) => Promise<void>) => {
   const [formData, setFormData] = useState<FormData>({ description: '', image: null, lake: '' });

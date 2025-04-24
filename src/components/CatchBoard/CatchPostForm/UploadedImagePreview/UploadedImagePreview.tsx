@@ -1,10 +1,6 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
-
-interface UploadedImagePreviewProps {
-	image: File;
-	onCancel: () => void;
-}
+import { UploadedImagePreviewProps } from '../../../../types/UploadedImage.types';
 
 const UploadedImagePreview: React.FC<UploadedImagePreviewProps> = ({ image, onCancel }) => {
 	return (
