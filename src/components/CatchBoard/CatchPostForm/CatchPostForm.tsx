@@ -7,8 +7,9 @@ import LakeSelect from './LakeSelect/LakeSelect';
 import DescriptionTextarea from './DescriptionTextarea/DescriptionTextarea';
 import UserAvatar from './UserAvatar/UserAvatar';
 import { useCatchPostForm } from '../../../hooks/useCatchPostForm';
+import { CatchPostFormProps } from '../../../types/CatchPostForm.types';
 
-const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: string) => Promise<void> }> = ({ onSubmit }) => {
+const CatchPostForm: React.FC<CatchPostFormProps> = ({ onSubmit }) => {
   const { user } = useContext(UserContext) || {};
   const { formData, handleChange, handleImageChange, handleSubmit } = useCatchPostForm(onSubmit);
 
@@ -32,9 +33,7 @@ const CatchPostForm: React.FC<{ onSubmit: (desc: string, image: File, lake: stri
 
       <LakeSelect value={formData.lake} onChange={(e) => handleChange('lake')(e.target.value)} />
       
-      
-        <SubmitPhotoButton onClick={handleSubmit} />
-   
+      <SubmitPhotoButton onClick={handleSubmit} />
     </form>
   );
 };

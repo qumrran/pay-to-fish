@@ -1,11 +1,7 @@
 import React from 'react';
+import { AuthSwitchProps } from '../../../types/AuthSwitch.types';
 
-interface Props {
-  isRegistering: boolean;
-  onSwitch: () => void;
-}
-
-const AuthSwitch: React.FC<Props> = ({ isRegistering, onSwitch }) => {
+const AuthSwitch: React.FC<AuthSwitchProps> = ({ isRegistering, onSwitch }) => {
   return (
     <div className='mt-4 text-center'>
       {isRegistering ? (

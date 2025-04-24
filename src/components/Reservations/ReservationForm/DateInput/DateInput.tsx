@@ -1,11 +1,5 @@
 import React from 'react';
-
-interface DateInputProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  min: string;
-}
+import { DateInputProps } from '../../../../types/DateInput.types';
 
 const DateInput: React.FC<DateInputProps> = ({ label, value, onChange, min }) => {
   const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -19,7 +13,7 @@ const DateInput: React.FC<DateInputProps> = ({ label, value, onChange, min }) =>
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onClick={handleClick} 
+        onClick={handleClick}
         required
         className="w-full px-3 py-2 border-2 border-gray-300 rounded cursor-pointer focus:outline-none focus:ring focus:ring-cyan-500"
         min={min}

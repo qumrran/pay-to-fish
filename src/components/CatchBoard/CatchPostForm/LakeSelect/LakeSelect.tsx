@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface LakeSelectProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-}
+import { LakeSelectProps } from '../../../../types/LakeSelect.types';
 
 const LakeSelect: React.FC<LakeSelectProps> = ({ value, onChange }) => {
   return (

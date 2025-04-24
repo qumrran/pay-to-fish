@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface ReservationSummaryProps {
-  totalCost: number;
-  days: number;
-}
+import { ReservationSummaryProps } from '../../../../types/ReservationSummary.types';
 
 const ReservationSummary: React.FC<ReservationSummaryProps> = ({ totalCost, days }) => {
   return (

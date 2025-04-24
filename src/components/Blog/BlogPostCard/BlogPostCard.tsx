@@ -6,16 +6,17 @@ import TagsList from './TagsList/TagsList';
 import { truncateText } from '../../../utils/truncateText';
 import PostHeader from './PostHeader/PostHeader';
 
-interface Props {
-  post: BlogPost;
-}
-
-const BlogPostCard: React.FC<Props> = ({ post }) => {
+const BlogPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
       {post.imgUrl && <BlogPostImage imgUrl={post.imgUrl} title={post.title} />}
       <div className="p-4 flex flex-col flex-grow">
-        <PostHeader title={post.title} date={post.date} author={post.author} category={post.category} />
+        <PostHeader
+          title={post.title}
+          date={post.date}
+          author={post.author}
+          category={post.category}
+        />
         <p className="text-sm text-gray-700 mb-4">{truncateText(post.content, 150)}</p>
         <TagsList tags={post.tags} />
         <div className="mt-auto">

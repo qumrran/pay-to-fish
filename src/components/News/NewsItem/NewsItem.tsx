@@ -3,11 +3,9 @@ import LazyLoad from 'react-lazyload';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import { NewsItem as NewsItemType } from '../../../types/NewsItem.types';
 
-interface NewsItemProps {
-	newsItem: NewsItemType;
-}
 
-const NewsItem: React.FC<NewsItemProps> = ({ newsItem }) => {
+
+const NewsItem: React.FC<{ newsItem: NewsItemType }> = ({ newsItem }) => {
 	const { title, content, imgUrl, date } = newsItem;
 
 	return (

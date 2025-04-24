@@ -1,9 +1,6 @@
 import React from 'react';
 import { FaSave } from 'react-icons/fa';
-
-interface SaveButtonProps {
-  onClick: () => void;
-}
+import { SaveButtonProps } from '../../../../types/SaveButton.types';
 
 const SaveButton: React.FC<SaveButtonProps> = ({ onClick }) => {
   return (

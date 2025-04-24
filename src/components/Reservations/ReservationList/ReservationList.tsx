@@ -1,11 +1,5 @@
 import React from 'react';
-import { Reservation } from '../../../types/Reservation.types';
-
-interface ReservationListProps {
-  reservations: Reservation[];
-  handleEditClick: (reservation: Reservation) => void;
-  handleShowConfirmation: (action: 'edit' | 'delete', reservationId?: string) => void;
-}
+import { ReservationListProps } from '../../../types/ReservationList.types';
 
 const ReservationList: React.FC<ReservationListProps> = ({ reservations, handleEditClick, handleShowConfirmation }) => {
   return (

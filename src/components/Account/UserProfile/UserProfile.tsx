@@ -1,9 +1,6 @@
 import React from "react";
 import { FaCircleUser } from "react-icons/fa6";
-
-interface UserProfileProps {
-  user?: { photoURL?: string | null; displayName?: string | null } | null;
-}
+import { UserProfileProps } from "../../../types/UserProfile.types";
 
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   return (

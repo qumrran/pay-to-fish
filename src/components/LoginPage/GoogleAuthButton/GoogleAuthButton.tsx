@@ -1,9 +1,6 @@
 import React from 'react';
 import googleLogo from './../../../assets/images/Google__G__logo.svg';
-
-interface GoogleAuthButtonProps {
-  onClick: () => void;
-}
+import { GoogleAuthButtonProps } from '../../../types/GoogleAuthButton.types';
 
 const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ onClick }) => {
   return (

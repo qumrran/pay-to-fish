@@ -1,9 +1,6 @@
 import React from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
-
-interface SubmitPhotoButtonProps {
-  onClick: (e: React.FormEvent) => Promise<void>; 
-}
+import { SubmitPhotoButtonProps } from '../../../../types/SubmitPhotoButton.types';
 
 const SubmitPhotoButton: React.FC<SubmitPhotoButtonProps> = ({ onClick }) => {
   return (

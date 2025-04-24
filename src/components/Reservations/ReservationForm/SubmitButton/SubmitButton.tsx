@@ -1,10 +1,7 @@
 import React from 'react';
 import { FaSave } from 'react-icons/fa';
 import { IoMdAddCircleOutline } from 'react-icons/io';
-
-interface SubmitButtonProps {
-  isEditing: boolean;
-}
+import { SubmitButtonProps } from '../../../../types/SubmitButton.types';
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({ isEditing }) => {
   return (

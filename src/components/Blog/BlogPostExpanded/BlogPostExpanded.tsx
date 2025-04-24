@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BlogPost } from '../../../types/Blog.types';
 import BackButton from '../../Shared/BackButton/BackButton';
 
-interface Props {
-  post: BlogPost;
-}
-
-const BlogPostExpanded: React.FC<Props> = ({ post }) => {
+const BlogPostExpanded: React.FC<{ post: BlogPost }> = ({ post }) => {
   const navigate = useNavigate();
 
   return (

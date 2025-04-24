@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface DescriptionTextareaProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
+import { DescriptionTextareaProps } from '../../../../types/DescriptionTextarea.types';
 
 const DescriptionTextarea: React.FC<DescriptionTextareaProps> = ({ value, onChange }) => {
   return (

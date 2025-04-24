@@ -1,10 +1,6 @@
 import React from 'react';
 import { MdAlternateEmail } from 'react-icons/md';
-
-interface AuthButtonProps {
-  onClick: () => void;
-  isRegistering: boolean;
-}
+import { AuthButtonProps } from '../../../types/AuthButton.types';
 
 const AuthButton: React.FC<AuthButtonProps> = ({ onClick, isRegistering }) => {
   return (

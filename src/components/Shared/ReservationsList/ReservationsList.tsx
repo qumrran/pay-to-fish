@@ -1,13 +1,7 @@
 import React from 'react';
-import { Reservation } from '../../../types/Reservation.types';
+import { ReservationsListProps } from '../../../types/ReservationsListProps.types';
 
-interface Props {
-  reservations: Reservation[];
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-}
-
-const ReservationsList: React.FC<Props> = ({ reservations, onEdit, onDelete }) => {
+const ReservationsList: React.FC<ReservationsListProps> = ({ reservations, onEdit, onDelete }) => {
   if (reservations.length === 0) return <p>Brak rezerwacji</p>;
 
   return (

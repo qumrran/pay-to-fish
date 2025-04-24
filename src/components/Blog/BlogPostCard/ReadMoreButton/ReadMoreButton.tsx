@@ -1,12 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SlArrowRightCircle } from 'react-icons/sl';
+import { ReadMoreButtonProps } from '../../../../types/ReadMoreButton.types';
 
-interface Props {
-  slug: string;
-}
-
-const ReadMoreButton: React.FC<Props> = ({ slug }) => {
+const ReadMoreButton: React.FC<ReadMoreButtonProps> = ({ slug }) => {
   const navigate = useNavigate();
 
   return (

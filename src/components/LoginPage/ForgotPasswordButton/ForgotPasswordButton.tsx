@@ -1,10 +1,7 @@
 import React from 'react';
+import { ForgotPasswordButtonProps } from '../../../types/ForgotPasswordButton.types';
 
-interface Props {
-  onClick: () => void;
-}
-
-const ForgotPasswordButton: React.FC<Props> = ({ onClick }) => {
+const ForgotPasswordButton: React.FC<ForgotPasswordButtonProps> = ({ onClick }) => {
   return (
     <div className='mt-4 text-center'>
       <button className='text-cyan-500 underline' onClick={onClick}>

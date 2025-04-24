@@ -1,13 +1,12 @@
 import React from 'react';
+import { PasswordResetFormProps } from '../../../types/PasswordResetForm.types';
 
-interface Props {
-  email: string;
-  setEmail: (email: string) => void;
-  onReset: () => void;
-  onCancel: () => void;
-}
-
-const PasswordResetForm: React.FC<Props> = ({ email, setEmail, onReset, onCancel }) => {
+const PasswordResetForm: React.FC<PasswordResetFormProps> = ({
+  email,
+  setEmail,
+  onReset,
+  onCancel,
+}) => {
   return (
     <div className='mt-4 text-center'>
       <input

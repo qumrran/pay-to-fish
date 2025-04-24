@@ -1,11 +1,6 @@
 import React from 'react';
 import { FaCheck, FaTimes } from 'react-icons/fa';
-
-interface ConfirmationDialogProps {
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { ConfirmationDialogProps } from '../../../types/ConfirmationDialog.types';
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConfirm, onCancel }) => {
   return (

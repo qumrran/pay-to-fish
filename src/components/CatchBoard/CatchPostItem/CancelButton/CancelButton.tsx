@@ -1,9 +1,6 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
-
-interface CancelButtonProps {
-  onClick: () => void;
-}
+import { CancelButtonProps } from '../../../../types/CancelButton.types';
 
 const CancelButton: React.FC<CancelButtonProps> = ({ onClick }) => {
   return (

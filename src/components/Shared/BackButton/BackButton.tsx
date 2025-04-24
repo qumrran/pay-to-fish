@@ -1,9 +1,6 @@
 import React from 'react';
 import { SlArrowLeftCircle } from 'react-icons/sl';
-
-interface BackButtonProps {
-  onClick: () => void;
-}
+import { BackButtonProps } from '../../../types/BackButton.types';
 
 const BackButton: React.FC<BackButtonProps> = ({ onClick }) => {
   return (

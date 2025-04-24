@@ -1,9 +1,6 @@
 import React from 'react';
 import { FaRegEdit, FaRegCalendar } from 'react-icons/fa';
-
-interface ReservationHeaderProps {
-  editingReservation: boolean;
-}
+import { ReservationHeaderProps } from '../../../../types/ReservationHeader.types';
 
 const ReservationHeader: React.FC<ReservationHeaderProps> = ({ editingReservation }) => {
   return (

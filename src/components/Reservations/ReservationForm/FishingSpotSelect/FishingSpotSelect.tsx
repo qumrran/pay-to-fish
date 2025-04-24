@@ -1,9 +1,5 @@
 import React from 'react';
-
-interface FishingSpotSelectProps {
-  value: string;
-  onChange: (value: string) => void;
-}
+import { FishingSpotSelectProps } from '../../../../types/FishingSpotSelect.types';
 
 const FishingSpotSelect: React.FC<FishingSpotSelectProps> = ({ value, onChange }) => {
   return (
