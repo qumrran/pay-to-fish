@@ -1,19 +1,22 @@
 import React from 'react';
 import { ReservationListProps } from '../../../types/ReservationList.types';
+import { sortReservations } from '../../../utils/sortReservations'; 
 
 const ReservationList: React.FC<ReservationListProps> = ({
   reservations,
   handleEditClick,
   handleShowConfirmation,
 }) => {
-  const today = new Date().toISOString().split('T')[0]; 
+  const today = new Date().toISOString().split('T')[0];
+
+  const sortedReservations = sortReservations(reservations); 
 
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Twoje Rezerwacje</h2>
       <ul>
-        {reservations.map((reservation) => {
-          const isPast = reservation.endDate < today; 
+        {sortedReservations.map((reservation) => {
+          const isPast = reservation.endDate < today;
 
           return (
             <li
@@ -35,7 +38,7 @@ const ReservationList: React.FC<ReservationListProps> = ({
               <div className="mt-2">
                 <button
                   onClick={() => handleEditClick(reservation)}
-                  disabled={isPast} 
+                  disabled={isPast}
                   className={`py-1 px-2 rounded transition duration-300 ${
                     isPast
                       ? 'bg-yellow-300 text-white cursor-not-allowed'
