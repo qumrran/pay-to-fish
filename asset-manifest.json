@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/pay-to-fish/static/css/main.defd7026.css",
-    "main.js": "/pay-to-fish/static/js/main.1cc7812d.js",
+    "main.css": "/pay-to-fish/static/css/main.ff6b80fb.css",
+    "main.js": "/pay-to-fish/static/js/main.1b545fa2.js",
     "static/media/Google__G__logo.svg": "/pay-to-fish/static/media/Google__G__logo.d7f092af888a54de79ed9c9303d689d7.svg",
     "index.html": "/pay-to-fish/index.html",
-    "main.defd7026.css.map": "/pay-to-fish/static/css/main.defd7026.css.map",
-    "main.1cc7812d.js.map": "/pay-to-fish/static/js/main.1cc7812d.js.map"
+    "main.ff6b80fb.css.map": "/pay-to-fish/static/css/main.ff6b80fb.css.map",
+    "main.1b545fa2.js.map": "/pay-to-fish/static/js/main.1b545fa2.js.map"
   },
   "entrypoints": [
-    "static/css/main.defd7026.css",
-    "static/js/main.1cc7812d.js"
+    "static/css/main.ff6b80fb.css",
+    "static/js/main.1b545fa2.js"
   ]
 }
